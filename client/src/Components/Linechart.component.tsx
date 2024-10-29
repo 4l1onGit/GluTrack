@@ -8,31 +8,39 @@ import {
   Legend,
   ResponsiveContainer,
 } from "recharts";
+import { Props } from "recharts/types/container/Surface";
+
+enum graphFilter {
+  BLOOD_SUGAR = "sugar",
+  CARBS = "carbs",
+  INSULIN = "insulin",
+  ALL = "all",
+}
 
 const data = [
   {
     name: "26/10",
-    bg: 40,
+    bg: 6,
     c: 24,
     in: 2,
   },
   {
     name: "27/10",
-    bg: 30,
+    bg: 9,
     c: 45,
-    in: 3,
+    in: 4,
   },
   {
     name: "28/10",
-    bg: 20,
+    bg: 4,
     c: 90,
-    in: 17,
+    in: 5,
   },
   {
     name: "29/10",
-    bg: 27,
+    bg: 13,
     c: 39,
-    in: 8,
+    in: 7,
   },
   // {
   //   name: "Page E",
@@ -54,7 +62,11 @@ const data = [
   // },
 ];
 
-const LineChartComponent = () => {
+interface Props {
+  filter: graphFilter;
+}
+
+const LineChartComponent = ({ filter }: Props) => {
   return (
     <ResponsiveContainer width="100%" height="100%">
       <LineChart
@@ -65,11 +77,17 @@ const LineChartComponent = () => {
         <CartesianGrid strokeDasharray="3 3" />
         <XAxis dataKey="name" />
         <YAxis />
-        <Tooltip />
+
         <Legend />
-        <Line type="monotone" dataKey="c" stroke="#92ffad" />
-        <Line type="monotone" dataKey="bg" stroke="#ffbc3f" />
-        <Line type="monotone" dataKey="in" stroke="#fffd6d" />
+        {filter === graphFilter.CARBS || filter === graphFilter.ALL ? (
+          <Line type="monotone" dataKey="c" stroke="#92ffad" strokeWidth={3} />
+        ) : null}
+        {filter === graphFilter.BLOOD_SUGAR || filter === graphFilter.ALL ? (
+          <Line type="monotone" dataKey="bg" stroke="#ffbc3f" strokeWidth={3} />
+        ) : null}
+        {filter === graphFilter.INSULIN || filter === graphFilter.ALL ? (
+          <Line type="monotone" dataKey="in" stroke="#fffd6d" strokeWidth={3} />
+        ) : null}
       </LineChart>
     </ResponsiveContainer>
   );
