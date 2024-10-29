@@ -1,14 +1,12 @@
 import {
-  LineChart,
+  CartesianGrid,
+  Legend,
   Line,
+  LineChart,
+  ResponsiveContainer,
   XAxis,
   YAxis,
-  CartesianGrid,
-  Tooltip,
-  Legend,
-  ResponsiveContainer,
 } from "recharts";
-import { Props } from "recharts/types/container/Surface";
 
 enum graphFilter {
   BLOOD_SUGAR = "sugar",
