@@ -1,3 +1,5 @@
+import LineChartComponent from "./Components/Linechart.component";
+
 const graphToggles = [
   { label: "Sugar", style: "hover:bg-orange-200", action: () => {} },
   { label: "Carbs", style: "hover:bg-green-200", action: () => {} },
@@ -19,7 +21,9 @@ const logActions = [
 function App() {
   return (
     <div className="flex flex-col p-4 pt-8 h-full items-center justify-center space-y-6 w-[95%] mx-auto">
-      <div className="bg-customblue-500 rounded-xl w-full h-[16rem] hover:bg-customblue-600 transition-colors duration-150 ease-in-out"></div>
+      <div className="bg-customblue-500 rounded-xl p-2 w-full h-[16rem] hover:bg-customblue-600 transition-colors duration-150 ease-in-out">
+        <LineChartComponent />
+      </div>
       <div className="flex space-x-4 w-full">
         {graphToggles.map((item) => (
           <button
