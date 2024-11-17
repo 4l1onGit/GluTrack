@@ -1,5 +1,6 @@
 import { useState } from "react";
 import LineChartComponent from "./Components/Linechart.component";
+import LogForm from "./Components/LogForm.component";
 
 enum graphFilter {
   BLOOD_SUGAR = "sugar",
@@ -31,23 +32,20 @@ const graphToggles = [
   },
 ];
 
-const logActions = [
-  {
-    label: "Log Insulin",
-    action: () => {},
-  },
-  {
-    label: "Log Mood",
-    action: () => {},
-  },
-];
-
 function App() {
   const [filterType, setFilterType] = useState(graphFilter.ALL);
+  const [toggleForm, setToggleForm] = useState(false);
   return (
-    <div className="flex flex-col p-4 pt-8 h-full items-center justify-center space-y-6 w-[95%] mx-auto">
+    <div className="relative flex flex-col p-4 h-screen space-y-6 w-full mx-auto">
+      <div
+        className={
+          toggleForm
+            ? "absolute inset-0 h-screen w-full bg-black bg-opacity-40 backdrop-blur-sm"
+            : "hidden"
+        }
+      ></div>
       <div className="bg-customblue-500 rounded-xl p-2 w-full h-[16rem] hover:bg-customblue-600 transition-colors duration-150 ease-in-out">
-        <LineChartComponent filter={filterType} />
+        {!toggleForm ? <LineChartComponent filter={filterType} /> : ""}
       </div>
       <div className="flex justify-center space-x-4 w-full">
         {graphToggles.map((item) => (
@@ -61,17 +59,21 @@ function App() {
         ))}
       </div>
       <div className="flex justify-center space-x-4 w-full">
-        {logActions.map((action) => (
-          <button
-            onClick={action.action}
-            key={action.label}
-            className="bg-customblue-500 w-[11rem] h-[8rem] rounded-xl hover:bg-customblue-600 transition-colors duration-150 ease-in-out font-bold text-blue-950"
-          >
-            {action.label}
-          </button>
-        ))}
+        <button
+          onClick={() => setToggleForm(!toggleForm)}
+          className="bg-customblue-500 w-full h-[8rem] rounded-xl hover:bg-customblue-600 transition-colors duration-150 ease-in-out font-bold text-blue-950"
+        >
+          Log
+        </button>
       </div>
       <div className="bg-customblue-500 w-full h-[13rem] rounded-xl hover:bg-customblue-600 transition-colors duration-150 ease-in-out"></div>
+
+      <LogForm
+        toggle={toggleForm}
+        setState={() => {
+          setToggleForm(!toggleForm);
+        }}
+      />
     </div>
   );
 }
