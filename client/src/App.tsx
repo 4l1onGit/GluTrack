@@ -33,8 +33,9 @@ const graphToggles = [
 ];
 
 function App() {
-  const [filterType, setFilterType] = useState(graphFilter.ALL);
-  const [toggleForm, setToggleForm] = useState(false);
+  const [filterType, setFilterType] = useState<graphFilter>(graphFilter.ALL);
+  const [toggleForm, setToggleForm] = useState<boolean>(false);
+  const [toggleLogList, setToggleLogList] = useState<boolean>(false);
   return (
     <div className="relative flex flex-col p-4 h-screen space-y-6 w-full mx-auto">
       <div
@@ -66,7 +67,17 @@ function App() {
           Log
         </button>
       </div>
-      <div className="bg-customblue-500 w-full h-[13rem] rounded-xl hover:bg-customblue-600 transition-colors duration-150 ease-in-out"></div>
+      <div className="flex space-x-4 w-full h-[13rem]">
+        <button
+          onClick={() => setToggleLogList(!toggleLogList)}
+          className="bg-customblue-500 w-full rounded-xl hover:bg-customblue-600 transition-colors duration-150 ease-in-out text-center text-blue-950 font-bold"
+        >
+          <h4>View Logs</h4>
+        </button>
+        <button className="bg-customblue-500 w-full rounded-xl hover:bg-customblue-600 transition-colors duration-150 ease-in-out text-blue-950 font-bold">
+          <h4>New Option</h4>
+        </button>
+      </div>
 
       <LogForm
         toggle={toggleForm}
