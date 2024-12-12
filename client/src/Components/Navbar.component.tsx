@@ -1,6 +1,6 @@
 const Navbar = () => {
   return (
-    <nav className="bg-customblue-500 flex w-full h-[4rem] justify-around items-center border-b-customblue-600 border-opacity-40 border-2">
+    <nav className="bg-gradient-to-b from-customblue-800 to-customblue-600 flex w-full h-[4rem] justify-around items-center border-opacity-40">
       <div className=""></div>
       <div className="flex">
         <h1 className="font-bold tracking-widest text-blue-950 text-xl">Glu</h1>
