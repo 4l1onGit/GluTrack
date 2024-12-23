@@ -6,6 +6,7 @@ import { IoIosSettings } from "react-icons/io";
 import { MdGrain } from "react-icons/md";
 import { RiBreadLine } from "react-icons/ri";
 import { BiSolidVial } from "react-icons/bi";
+import LogList from "./Components/LogList.component";
 
 enum graphFilter {
   BLOOD_SUGAR = "sugar",
@@ -49,19 +50,23 @@ function App() {
     <div className="relative flex flex-col p-4 h-screen space-y-6 w-full mx-auto">
       <div
         className={
-          toggleForm
-            ? "absolute inset-0 h-screen w-full bg-black bg-opacity-40 backdrop-blur-sm"
+          toggleForm || toggleLogList
+            ? "absolute inset-0 h-screen w-full bg-black bg-opacity-15 backdrop-blur-sm"
             : "hidden"
         }
       ></div>
       <div
         className={`rounded-xl p-2 w-full h-[16rem] drop-shadow-xl hover:bg-customblue-600 transition-colors duration-150 ease-in-out ${
-          !toggleForm
-            ? "bg-gradient-to-b from-customblue-700 to-customblue-500"
-            : ""
+          toggleForm || toggleLogList
+            ? ""
+            : "bg-gradient-to-b from-customblue-700 to-customblue-500"
         }`}
       >
-        {!toggleForm ? <LineChartComponent filter={filterType} /> : ""}
+        {toggleForm || toggleLogList ? (
+          ""
+        ) : (
+          <LineChartComponent filter={filterType} />
+        )}
       </div>
       <div className="flex justify-center space-x-4 w-full">
         {graphToggles.map((item) => (
@@ -110,6 +115,12 @@ function App() {
         toggle={toggleForm}
         setState={() => {
           setToggleForm(!toggleForm);
+        }}
+      />
+      <LogList
+        toggle={toggleLogList}
+        setState={() => {
+          setToggleLogList(!toggleLogList);
         }}
       />
     </div>
