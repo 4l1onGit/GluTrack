@@ -1,4 +1,5 @@
 export interface Log {
+    id: number;
     glucose: number;
     insulin: number;
     date: string;
