@@ -43,6 +43,7 @@ function modifyDate(date: string) {
 const LogForm = ({ toggle, setState }: Props) => {
   const [dateInput, setDateInput] = useState("");
   const [formData, setFormData] = useState<Log>({
+    id: undefined,
     glucose: 0,
     carb: 0,
     date: Date.now().toString(),
@@ -76,7 +77,7 @@ const LogForm = ({ toggle, setState }: Props) => {
           if (res.status == 200) {
             setState(false);
           }
-          setFormData(initialState);
+          setFormData({ ...initialState, id: undefined });
           setSubmitting(false);
         })
         .catch((err) => {

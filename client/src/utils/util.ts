@@ -1,5 +1,5 @@
 export interface Log {
-    id: number;
+    id: number | undefined;
     glucose: number;
     insulin: number;
     date: string;
