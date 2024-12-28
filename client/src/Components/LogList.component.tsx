@@ -41,7 +41,7 @@ const LogList = ({ toggle, setState }: Props) => {
       if (page > totalPages) {
         setPage(totalPages);
       }
-      axios.get(`${import.meta.env.VITE_URL}/log/${page}`).then((res) => {
+      axios.get(`${import.meta.env.VITE_URL}/log/page/${page}`).then((res) => {
         setLogs(res.data);
         setServerStatus(true);
         console.log(page);
@@ -49,7 +49,7 @@ const LogList = ({ toggle, setState }: Props) => {
     } catch (error) {
       console.log(error);
     }
-  }, [page]);
+  }, [page, totalPages]);
 
   const pagination = new Array(totalPages);
   for (let i = 0; i < pagination.length; i++) {
@@ -125,11 +125,7 @@ const LogList = ({ toggle, setState }: Props) => {
                       <li>Insulin: {log.insulin}</li>
                       <li>carb: {log.carb}</li>
                       {selectedLog == log && togglePopup ? (
-                        <LogDropDown
-                          key={selectedLog?.id}
-                          log={selectedLog!}
-                          toggle={togglePopup}
-                        />
+                        <LogDropDown key={selectedLog?.id} log={selectedLog!} />
                       ) : (
                         ""
                       )}

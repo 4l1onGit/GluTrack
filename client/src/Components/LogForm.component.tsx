@@ -75,6 +75,7 @@ const LogForm = ({ toggle, setState }: Props) => {
         .post(`${import.meta.env.VITE_URL}/log/create`, formData)
         .then((res) => {
           if (res.status == 200) {
+            console.log(res);
             setState(false);
           }
           setFormData({ ...initialState, id: undefined });

@@ -1,22 +1,27 @@
+import { useEffect } from "react";
 import { Log } from "../utils/util";
+import axios from "axios";
 
 interface Props {
-  toggle: boolean;
   log: Log;
 }
 
-const LogDropDown = ({ toggle, log }: Props) => {
+const LogDropDown = ({ log }: Props) => {
+  const handleDelete = () => {
+    axios
+      .delete(`${import.meta.env.VITE_URL}/log/delete/${log.id}`)
+      .then((res) => {
+        console.log(res);
+      });
+  };
+
   return (
-    <div
-      className={
-        toggle ? "transition-all duration-300 h-[70%] max-h-[70%]" : "max-h-0"
-      }
-    >
+    <div className="py-1">
       <ul>
         <li>Note: </li>
         <li>{log.note}</li>
         <li className="flex space-x-2 py-2">
-          <button>Delete</button>
+          <button onClick={() => handleDelete()}>Delete</button>
           <button>Edit</button>
         </li>
       </ul>
