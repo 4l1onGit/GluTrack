@@ -1,6 +1,6 @@
 import { useState } from "react";
 import LineChartComponent from "./Components/Linechart.component";
-import LogForm from "./Components/LogForm.component";
+import LogForm from "./Components/LogFormCreateToggle.component";
 import { FaListUl, FaPlus, FaRegCircle } from "react-icons/fa";
 import { IoIosSettings } from "react-icons/io";
 import { MdGrain } from "react-icons/md";
@@ -113,7 +113,7 @@ function App() {
 
       <LogForm
         toggle={toggleForm}
-        setState={() => {
+        setToggle={() => {
           setToggleForm(!toggleForm);
         }}
       />
