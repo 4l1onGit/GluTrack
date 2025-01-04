@@ -1,11 +1,11 @@
 import { useState } from "react";
-import LineChartComponent from "./Components/Linechart.component";
-import LogForm from "./Components/LogFormCreateToggle.component";
+import { BiSolidVial } from "react-icons/bi";
 import { FaListUl, FaPlus, FaRegCircle } from "react-icons/fa";
 import { IoIosSettings } from "react-icons/io";
 import { MdGrain } from "react-icons/md";
 import { RiBreadLine } from "react-icons/ri";
-import { BiSolidVial } from "react-icons/bi";
+import LineChartComponent from "./Components/Linechart.component";
+import LogFormToggle from "./Components/LogFormToggle.component";
 import LogList from "./Components/LogList.component";
 
 enum graphFilter {
@@ -46,6 +46,7 @@ function App() {
   const [filterType, setFilterType] = useState<graphFilter>(graphFilter.ALL);
   const [toggleForm, setToggleForm] = useState<boolean>(false);
   const [toggleLogList, setToggleLogList] = useState<boolean>(false);
+
   return (
     <div className="relative flex flex-col p-4 h-screen space-y-6 w-full mx-auto">
       <div
@@ -111,7 +112,7 @@ function App() {
         </button>
       </div>
 
-      <LogForm
+      <LogFormToggle
         toggle={toggleForm}
         setToggle={() => {
           setToggleForm(!toggleForm);

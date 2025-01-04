@@ -60,7 +60,7 @@ const LogList = ({ toggle, setState }: Props) => {
     <div
       className={
         toggle
-          ? "bg-customblue-500 flex flex-col items-start absolute inset-x-0 bottom-0 w-full h-[70%] max-h-[70%] border-b-customblue-500 rounded-t-2xl border-t-2 transition-all duration-300 border-blue-200"
+          ? "bg-customblue-500 flex flex-col overflow-hidden items-start absolute inset-x-0 bottom-0 w-full h-[70%] max-h-[70%] border-b-customblue-500 rounded-t-2xl border-t-2 transition-all duration-300 border-blue-200"
           : "max-h-0"
       }
     >

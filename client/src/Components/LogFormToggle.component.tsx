@@ -1,12 +1,12 @@
 import { IoMdClose } from "react-icons/io";
-import Form from "./LogForm.component";
+import LogFormCreate from "./LogFormCreate.component";
 
 interface Props {
   toggle: boolean;
   setToggle: (status: boolean) => void;
 }
 
-const LogForm = ({ toggle, setToggle }: Props) => {
+const LogFormToggle = ({ toggle, setToggle }: Props) => {
   return (
     <div
       className={
@@ -22,7 +22,7 @@ const LogForm = ({ toggle, setToggle }: Props) => {
           </button>
         </div>
         <div className="flex flex-col w-full p-4">
-          <Form
+          <LogFormCreate
             setToggle={() => {
               setToggle(!toggle);
             }}
@@ -33,4 +33,4 @@ const LogForm = ({ toggle, setToggle }: Props) => {
   );
 };
 
-export default LogForm;
+export default LogFormToggle;

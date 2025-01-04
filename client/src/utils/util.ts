@@ -29,3 +29,17 @@ export interface Log {
   
     return `${day}-${month}-${year}-${time}`;
   }
+
+  export function convertDateDefault(date: string) {
+  
+    const day = date.slice(0, 2);
+    const month = date.slice(3, 5);
+    const year = date.slice(6, 10);
+
+    const hours = date.slice(11, 13);
+    const mins = date.slice(14, 16)
+
+    return `${year}-${month}-${day}T${hours}:${mins}`
+  }
+
+

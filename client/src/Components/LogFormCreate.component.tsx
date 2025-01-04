@@ -16,7 +16,7 @@ interface Props {
   setToggle: (status: boolean) => void;
 }
 
-const Form = ({ setToggle }: Props) => {
+const LogFormCreate = ({ setToggle }: Props) => {
   const [dateInput, setDateInput] = useState("");
   const [formData, setFormData] = useState<Log>({
     id: undefined,
@@ -185,4 +185,4 @@ const Form = ({ setToggle }: Props) => {
   );
 };
 
-export default Form;
+export default LogFormCreate;
