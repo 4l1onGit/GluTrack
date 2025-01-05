@@ -43,27 +43,44 @@ const LogFormCreate = ({ setToggle }: Props) => {
     if (formData?.date == "" || formData?.date.length != 14) {
       setFormData({ ...formData!, date: createDate() });
     }
+    if (navigator.onLine) {
+      try {
+        setSubmitting(true);
 
-    try {
-      setSubmitting(true);
-
-      axios
-        .post(`${import.meta.env.VITE_URL}/log/create`, formData)
-        .then((res) => {
-          if (res.status == 200) {
-            console.log(res);
-            setToggle(false);
-          }
-          setFormData({ ...initialState, id: undefined });
-          setSubmitting(false);
-        })
-        .catch((err) => {
-          console.log(err);
-          setSubmitting(false);
-        });
-    } catch (err) {
-      console.log(err);
-      setSubmitting(false);
+        axios
+          .post(`${import.meta.env.VITE_URL}/log/create`, formData)
+          .then((res) => {
+            if (res.status == 200) {
+              console.log(res);
+              setToggle(false);
+            }
+            setFormData({ ...initialState, id: undefined });
+            setSubmitting(false);
+          })
+          .catch((err) => {
+            console.log(err);
+            setSubmitting(false);
+          });
+      } catch (err) {
+        console.log(err);
+        setSubmitting(false);
+      }
+    } else {
+      try {
+        if (localStorage.getItem("createLog")) {
+          const logs = localStorage.getItem("createLog")?.split("+");
+          logs?.push(JSON.stringify(formData));
+          localStorage.setItem("createLog", logs!.join("+"));
+        } else {
+          localStorage.setItem("createLog", JSON.stringify(formData));
+        }
+        setSubmitting(false);
+        setToggle(false);
+      } catch (err) {
+        console.log(err);
+        setSubmitting(false);
+        setToggle(false);
+      }
     }
   };
 

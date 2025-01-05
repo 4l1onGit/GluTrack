@@ -69,7 +69,7 @@ const LogList = ({ toggle, setState }: Props) => {
     <div
       className={
         toggle
-          ? "bg-customblue-500 flex flex-col overflow-hidden items-start absolute inset-x-0 bottom-0 w-full h-[70%] max-h-[70%] border-b-customblue-500 rounded-t-2xl border-t-2 transition-all duration-300 border-blue-200"
+          ? "bg-customblue-500 flex flex-col overflow-hidden  items-start absolute inset-x-0 bottom-0 w-full h-[70%] max-h-[70%] border-b-customblue-500 rounded-t-2xl border-t-2 transition-all duration-300 border-blue-200"
           : "max-h-0"
       }
     >
@@ -82,11 +82,11 @@ const LogList = ({ toggle, setState }: Props) => {
           <IoMdClose />
         </button>
         {serverStatus ? (
-          <ul className="flex justify-center w-full items-center h-12 space-x-1">
+          <ul className="flex justify-center w-full items-center h-12 space-x-1  rounded-lg">
             {page > 1 ? (
               <li className="flex items-center">
                 <button
-                  className="text-[#FFDFBF] text-4xl "
+                  className="text-white text-3xl "
                   onClick={() => setPage(page - 1)}
                 >
                   <FaChevronLeft />
@@ -99,7 +99,11 @@ const LogList = ({ toggle, setState }: Props) => {
             {pagination.map((_, index) => (
               <li key={index}>
                 <button
-                  className="px-3 border-2 rounded-md border-customblue bg-[#FFDFBF] text-2xl text-customblue-950"
+                  className={`px-3 border-2 border-none rounded-md font-semibold text-xl text-blue-950 ${
+                    page == index + 1
+                      ? " bg-gradient-to-l from-customblue-800 to-customblue-900 text-white"
+                      : "bg-white"
+                  }`}
                   onClick={() => setPage(index + 1)}
                 >
                   {index + 1}
@@ -109,7 +113,7 @@ const LogList = ({ toggle, setState }: Props) => {
             {page < totalPages ? (
               <li className="flex items-center">
                 <button
-                  className="text-[#FFDFBF] text-4xl"
+                  className="text-white text-3xl"
                   onClick={() => setPage(page + 1)}
                 >
                   <FaChevronRight />
@@ -122,7 +126,6 @@ const LogList = ({ toggle, setState }: Props) => {
         ) : (
           ""
         )}
-
         <div className="flex flex-col justify-center w-full h-full items-center">
           <ul className="w-full space-y-2 h-full">
             {serverStatus ? (
@@ -132,7 +135,7 @@ const LogList = ({ toggle, setState }: Props) => {
                   key={`${log.id}`}
                 >
                   <div className="flex p-2 space-x-2 justify-between">
-                    <ul className="flex flex-col text-[#FFDFBF] font-semibold uppercase text-sm">
+                    <ul className="flex flex-col text-white font-semibold uppercase text-sm">
                       <li>Glucose: {log.glucose}</li>
                       <li>Insulin: {log.insulin}</li>
                       <li>carb: {log.carb}</li>
@@ -143,8 +146,10 @@ const LogList = ({ toggle, setState }: Props) => {
                       )}
                     </ul>
                     <button
-                      className={`text-[#FFDFBF] transition-transform duration-300 ${
-                        selectedLog == log && togglePopup ? "" : "rotate-90"
+                      className={` transition-all duration-300 ${
+                        selectedLog == log && togglePopup
+                          ? " text-blue-950"
+                          : "rotate-90 text-white"
                       }`}
                       onClick={() => handleSelectedLog(log)}
                     >

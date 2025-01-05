@@ -1,3 +1,5 @@
+import axios from "axios";
+
 export interface Log {
     id: number | undefined;
     glucose: number;
@@ -43,3 +45,27 @@ export interface Log {
   }
 
 
+export function postCache() {
+  if( localStorage.getItem("createLog")) {
+     localStorage
+        .getItem("createLog")
+        ?.split("+")
+        .forEach((data) => {
+           postLog(JSON.parse(data));
+        });
+        localStorage.removeItem("createLog");
+  }
+}
+
+export async function postLog(data : Log) {
+  axios
+  .post(`${import.meta.env.VITE_URL}/log/create`, data)
+  .then((res) => {
+    if (res.status == 200) {
+      console.log(res);
+    }  
+  })
+  .catch((err) => {
+    console.log(err);
+  });
+}

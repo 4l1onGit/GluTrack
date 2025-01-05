@@ -7,6 +7,7 @@ import { RiBreadLine } from "react-icons/ri";
 import LineChartComponent from "./Components/Linechart.component";
 import LogFormToggle from "./Components/LogFormToggle.component";
 import LogList from "./Components/LogList.component";
+import { postCache } from "./utils/util";
 
 enum graphFilter {
   BLOOD_SUGAR = "sugar",
@@ -46,6 +47,10 @@ function App() {
   const [filterType, setFilterType] = useState<graphFilter>(graphFilter.ALL);
   const [toggleForm, setToggleForm] = useState<boolean>(false);
   const [toggleLogList, setToggleLogList] = useState<boolean>(false);
+
+  if (navigator.onLine && localStorage.length) {
+    postCache();
+  }
 
   return (
     <div className="relative flex flex-col p-4 h-screen space-y-6 w-full mx-auto">
