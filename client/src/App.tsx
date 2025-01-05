@@ -118,6 +118,7 @@ function App() {
           setToggleForm(!toggleForm);
         }}
       />
+
       <LogList
         toggle={toggleLogList}
         setState={() => {

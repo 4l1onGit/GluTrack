@@ -24,13 +24,17 @@ const LogList = ({ toggle, setState }: Props) => {
   };
 
   useEffect(() => {
-    try {
-      axios.get(`${import.meta.env.VITE_URL}/logTotal`).then((res) => {
-        setTotalPages(Math.ceil(res.data / 5));
-      });
-    } catch (error) {
-      console.log(error);
-    }
+    const fetchData = async () => {
+      try {
+        await axios.get(`${import.meta.env.VITE_URL}/logTotal`).then((res) => {
+          setTotalPages(Math.ceil(res.data / 5));
+        });
+        setServerStatus(true);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    fetchData();
   }, []);
 
   useEffect(() => {
@@ -41,13 +45,18 @@ const LogList = ({ toggle, setState }: Props) => {
       if (page > totalPages) {
         setPage(totalPages);
       }
-      axios.get(`${import.meta.env.VITE_URL}/log/page/${page}`).then((res) => {
-        setLogs(res.data);
-        setServerStatus(true);
-        console.log(page);
-      });
+      const fetchData = async () => {
+        await axios
+          .get(`${import.meta.env.VITE_URL}/log/page/${page}`)
+          .then((res) => {
+            setLogs(res.data);
+            setServerStatus(true);
+          });
+      };
+      fetchData();
     } catch (error) {
       console.log(error);
+      setServerStatus(false);
     }
   }, [page, totalPages]);
 
@@ -72,47 +81,50 @@ const LogList = ({ toggle, setState }: Props) => {
         <button onClick={() => setState(false)}>
           <IoMdClose />
         </button>
+        {serverStatus ? (
+          <ul className="flex justify-center w-full items-center h-12 space-x-1">
+            {page > 1 ? (
+              <li className="flex items-center">
+                <button
+                  className="text-[#FFDFBF] text-4xl "
+                  onClick={() => setPage(page - 1)}
+                >
+                  <FaChevronLeft />
+                </button>
+              </li>
+            ) : (
+              ""
+            )}
 
-        <ul className="flex justify-center w-full items-center h-12 space-x-1">
-          {page > 1 ? (
-            <li className="flex items-center">
-              <button
-                className="text-[#FFDFBF] text-4xl "
-                onClick={() => setPage(page - 1)}
-              >
-                <FaChevronLeft />
-              </button>
-            </li>
-          ) : (
-            ""
-          )}
-
-          {pagination.map((_, index) => (
-            <li key={index}>
-              <button
-                className="px-3 border-2 rounded-md border-customblue bg-[#FFDFBF] text-2xl text-customblue-950"
-                onClick={() => setPage(index + 1)}
-              >
-                {index + 1}
-              </button>
-            </li>
-          ))}
-          {page < totalPages ? (
-            <li className="flex items-center">
-              <button
-                className="text-[#FFDFBF] text-4xl"
-                onClick={() => setPage(page + 1)}
-              >
-                <FaChevronRight />
-              </button>
-            </li>
-          ) : (
-            ""
-          )}
-        </ul>
+            {pagination.map((_, index) => (
+              <li key={index}>
+                <button
+                  className="px-3 border-2 rounded-md border-customblue bg-[#FFDFBF] text-2xl text-customblue-950"
+                  onClick={() => setPage(index + 1)}
+                >
+                  {index + 1}
+                </button>
+              </li>
+            ))}
+            {page < totalPages ? (
+              <li className="flex items-center">
+                <button
+                  className="text-[#FFDFBF] text-4xl"
+                  onClick={() => setPage(page + 1)}
+                >
+                  <FaChevronRight />
+                </button>
+              </li>
+            ) : (
+              ""
+            )}
+          </ul>
+        ) : (
+          ""
+        )}
 
         <div className="flex flex-col justify-center w-full h-full items-center">
-          <ul className="w-full space-y-2">
+          <ul className="w-full space-y-2 h-full">
             {serverStatus ? (
               logs.map((log) => (
                 <li
