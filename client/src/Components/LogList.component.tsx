@@ -69,7 +69,7 @@ const LogList = ({ toggle, setState }: Props) => {
     <div
       className={
         toggle
-          ? "bg-customblue-500 flex flex-col overflow-hidden  items-start absolute inset-x-0 bottom-0 w-full h-[70%] max-h-[70%] border-b-customblue-500 rounded-t-2xl border-t-2 transition-all duration-300 border-blue-200"
+          ? "bg-customblue-500 flex flex-col overflow-hidden  items-start absolute inset-x-0 bottom-0 w-full h-[70%] overflow-y-scroll max-h-[70%] border-b-customblue-500 rounded-t-2xl border-t-2 transition-all duration-300 border-blue-200"
           : "max-h-0"
       }
     >
@@ -135,10 +135,20 @@ const LogList = ({ toggle, setState }: Props) => {
                   key={`${log.id}`}
                 >
                   <div className="flex p-2 space-x-2 justify-between">
-                    <ul className="flex flex-col text-white font-semibold uppercase text-sm">
-                      <li>Glucose: {log.glucose}</li>
-                      <li>Insulin: {log.insulin}</li>
-                      <li>carb: {log.carb}</li>
+                    <ul className="flex flex-col text-white font-semibold">
+                      <li className="text-sm">{log.date}</li>
+                      <li>
+                        Glucose: {log.glucose}{" "}
+                        <span className="text-xs">mmol/L</span>
+                      </li>
+                      <li>
+                        Insulin: {log.insulin}{" "}
+                        <span className="text-xs">Units</span>
+                      </li>
+                      <li>
+                        Carbs: {log.carb}
+                        <span className="text-xs">G</span>
+                      </li>
                       {selectedLog == log && togglePopup ? (
                         <LogDropDown key={selectedLog?.id} log={selectedLog!} />
                       ) : (
