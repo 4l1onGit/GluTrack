@@ -62,7 +62,7 @@ const graphTimeToggles = [
 function App() {
   const [filterType, setFilterType] = useState<graphFilter>(graphFilter.ALL);
   const [timeFilter, setTimeFilter] = useState<graphTimeFilter>(
-    graphTimeFilter.DAY
+    graphTimeFilter.WEEK
   );
   const [toggleForm, setToggleForm] = useState<boolean>(false);
   const [toggleLogList, setToggleLogList] = useState<boolean>(false);
@@ -81,7 +81,7 @@ function App() {
         }
       ></div>
       <div
-        className={`rounded-xl p-2 w-full h-[16rem] drop-shadow-xl hover:bg-customblue-600 transition-colors duration-150 ease-in-out ${
+        className={`rounded-xl p-2 w-full h-[16rem] drop-shadow-xl hover:bg-customblue-600 transition-colors  duration-150 ease-in-out ${
           toggleForm || toggleLogList
             ? ""
             : "bg-gradient-to-b from-customblue-700 to-customblue-500"

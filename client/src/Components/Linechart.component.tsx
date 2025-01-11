@@ -28,8 +28,11 @@ const getDay = () => {
 
 const LineChartComponent = ({ typeFilter, timeFilter }: Props) => {
   const [dateValue, setDateValue] = useState<string>();
-
+  const [yAxis, setYAxis] = useState<string>("carb");
   const [data, setData] = useState();
+
+  const [max, setMax] = useState<number>();
+  const [min, setMin] = useState<number>();
 
   if (
     timeFilter == graphTimeFilter.YEAR &&
@@ -53,6 +56,31 @@ const LineChartComponent = ({ typeFilter, timeFilter }: Props) => {
     setDateValue(getDay());
   }
 
+  if (typeFilter == graphFilter.INSULIN && yAxis != "insulin") {
+    setYAxis("insulin");
+    setMax(Math.max(...data.map((d) => d.insulin)));
+    setMin(Math.min(...data.map((d) => d.insulin)));
+  }
+
+  if (
+    (typeFilter == graphFilter.CARBS || typeFilter == graphFilter.ALL) &&
+    yAxis != "carb"
+  ) {
+    setYAxis("carb");
+    setMax(Math.max(...data.map((d) => d.carb)));
+    if (typeFilter != graphFilter.ALL) {
+      setMin(Math.min(...data.map((d) => d.carb)));
+    } else {
+      setMin(Math.min(...data.map((d) => d.insulin)));
+    }
+  }
+
+  if (typeFilter == graphFilter.BLOOD_SUGAR && yAxis != "glucose") {
+    setYAxis("glucose");
+    setMax(Math.max(...data.map((d) => d.glucose)));
+    setMin(Math.min(...data.map((d) => d.glucose)));
+  }
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -70,16 +98,13 @@ const LineChartComponent = ({ typeFilter, timeFilter }: Props) => {
     };
     fetchData();
   }, [timeFilter, dateValue]);
+
   return (
     <ResponsiveContainer width="100%" height="100%">
-      <LineChart
-        className="w-full h-full "
-        data={data}
-        margin={{ right: 50, top: 50 }}
-      >
+      <LineChart data={data} margin={{ right: 50, top: 50 }}>
         <CartesianGrid strokeDasharray="3 3" />
         <XAxis dataKey="date" />
-        <YAxis />
+        <YAxis dataKey={yAxis} domain={[min!, max!]} />
 
         <Legend />
         {typeFilter === graphFilter.CARBS || typeFilter === graphFilter.ALL ? (
