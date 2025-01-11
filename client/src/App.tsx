@@ -7,44 +7,63 @@ import { RiBreadLine } from "react-icons/ri";
 import LineChartComponent from "./Components/Linechart.component";
 import LogFormToggle from "./Components/LogFormToggle.component";
 import LogList from "./Components/LogList.component";
-import { postCache } from "./utils/util";
-
-enum graphFilter {
-  BLOOD_SUGAR = "sugar",
-  CARBS = "carbs",
-  INSULIN = "insulin",
-  ALL = "all",
-}
+import { graphFilter, graphTimeFilter, postCache } from "./utils/util";
 
 const graphToggles = [
   {
     label: "Sugar",
-    style: "hover:bg-orange-200",
+    style: "from-orange-200 to-orange-300",
     filter: graphFilter.BLOOD_SUGAR,
     icon: <MdGrain />,
   },
   {
     label: "Carbs",
-    style: "hover:bg-green-200",
+    style: "from-green-200 to-green-300",
     filter: graphFilter.CARBS,
     icon: <RiBreadLine />,
   },
   {
     label: "Insulin",
-    style: "hover:bg-yellow-200",
+    style: "from-yellow-200 to-yellow-300",
     filter: graphFilter.INSULIN,
     icon: <BiSolidVial />,
   },
   {
     label: "All",
-    style: "hover:bg-purple-200",
+    style: "from-purple-200 to-purple-300",
     filter: graphFilter.ALL,
     icon: <FaRegCircle />,
   },
 ];
 
+const graphTimeToggles = [
+  {
+    label: "Day",
+    style: "from-orange-200 to-orange-300",
+    filter: graphTimeFilter.DAY,
+  },
+  {
+    label: "Week",
+    style: "from-green-200 to-green-300",
+    filter: graphTimeFilter.WEEK,
+  },
+  {
+    label: "Month",
+    style: "from-yellow-200 to-yellow-300",
+    filter: graphTimeFilter.MONTH,
+  },
+  {
+    label: "Year",
+    style: "from-purple-200 to-purple-300",
+    filter: graphTimeFilter.YEAR,
+  },
+];
+
 function App() {
   const [filterType, setFilterType] = useState<graphFilter>(graphFilter.ALL);
+  const [timeFilter, setTimeFilter] = useState<graphTimeFilter>(
+    graphTimeFilter.DAY
+  );
   const [toggleForm, setToggleForm] = useState<boolean>(false);
   const [toggleLogList, setToggleLogList] = useState<boolean>(false);
 
@@ -71,14 +90,35 @@ function App() {
         {toggleForm || toggleLogList ? (
           ""
         ) : (
-          <LineChartComponent filter={filterType} />
+          <LineChartComponent typeFilter={filterType} timeFilter={timeFilter} />
         )}
+      </div>
+      <div className="flex justify-center space-x-4 w-full">
+        {graphTimeToggles.map((item) => (
+          <button
+            onClick={() => setTimeFilter(item.filter)}
+            className={`bg-gradient-to-b  w-[25%] h-[3rem] rounded-xl font-bold text-xs shadow-lg text-blue-950 uppercase ${
+              timeFilter == item.filter
+                ? item.style
+                : "from-customblue-700 to-customblue-500"
+            }`}
+            key={item.label}
+          >
+            <div className="flex justify-center">
+              <p className="p-1">{item.label}</p>{" "}
+            </div>
+          </button>
+        ))}
       </div>
       <div className="flex justify-center space-x-4 w-full">
         {graphToggles.map((item) => (
           <button
             onClick={() => setFilterType(item.filter)}
-            className={`bg-gradient-to-b from-customblue-700 to-customblue-500 w-[25%] h-[3rem] rounded-xl font-bold text-xs shadow-lg text-blue-950 uppercase ${item.style}`}
+            className={`bg-gradient-to-b from-customblue-700 to-customblue-500 w-[25%] h-[3rem] rounded-xl font-bold text-xs shadow-lg text-blue-950 uppercase ${
+              filterType == item.filter
+                ? item.style
+                : "from-customblue-700 to-customblue-500"
+            }`}
             key={item.label}
           >
             <div className="flex justify-center">

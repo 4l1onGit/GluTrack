@@ -69,3 +69,18 @@ export async function postLog(data : Log) {
     console.log(err);
   });
 }
+
+
+export const enum graphFilter {
+  BLOOD_SUGAR = "sugar",
+  CARBS = "carbs",
+  INSULIN = "insulin",
+  ALL = "all",
+}
+
+export const enum graphTimeFilter {
+  DAY = "day",
+  WEEK = "week",
+  MONTH = "month",
+  YEAR = "year",
+}
