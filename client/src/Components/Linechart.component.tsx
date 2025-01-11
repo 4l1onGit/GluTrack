@@ -7,7 +7,7 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
-import { graphTimeFilter, graphFilter } from "../utils/util";
+import { graphTimeFilter, graphFilter, Log } from "../utils/util";
 import { useEffect, useState } from "react";
 import axios from "axios";
 
@@ -29,10 +29,28 @@ const getDay = () => {
 const LineChartComponent = ({ typeFilter, timeFilter }: Props) => {
   const [dateValue, setDateValue] = useState<string>();
   const [yAxis, setYAxis] = useState<string>("carb");
-  const [data, setData] = useState();
+  const [data, setData] = useState<Log[]>();
 
   const [max, setMax] = useState<number>();
   const [min, setMin] = useState<number>();
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        await axios
+          .get(
+            `${import.meta.env.VITE_URL}/log/filter/${timeFilter}/${dateValue}`
+          )
+          .then((res) => {
+            console.log(res.data);
+            setData(res.data);
+          });
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    fetchData();
+  }, [timeFilter, dateValue]);
 
   if (
     timeFilter == graphTimeFilter.YEAR &&
@@ -58,8 +76,10 @@ const LineChartComponent = ({ typeFilter, timeFilter }: Props) => {
 
   if (typeFilter == graphFilter.INSULIN && yAxis != "insulin") {
     setYAxis("insulin");
-    setMax(Math.max(...data.map((d) => d.insulin)));
-    setMin(Math.min(...data.map((d) => d.insulin)));
+    if (data) {
+      setMax(Math.max(...data.map((d) => d.insulin)));
+      setMin(Math.min(...data.map((d) => d.insulin)));
+    }
   }
 
   if (
@@ -67,37 +87,24 @@ const LineChartComponent = ({ typeFilter, timeFilter }: Props) => {
     yAxis != "carb"
   ) {
     setYAxis("carb");
-    setMax(Math.max(...data.map((d) => d.carb)));
-    if (typeFilter != graphFilter.ALL) {
-      setMin(Math.min(...data.map((d) => d.carb)));
-    } else {
-      setMin(Math.min(...data.map((d) => d.insulin)));
+
+    if (data) {
+      setMax(Math.max(...data.map((d) => d.carb)));
+      if (typeFilter != graphFilter.ALL) {
+        setMin(Math.min(...data.map((d) => d.carb)));
+      } else {
+        setMin(Math.min(...data.map((d) => d.insulin)));
+      }
     }
   }
 
   if (typeFilter == graphFilter.BLOOD_SUGAR && yAxis != "glucose") {
     setYAxis("glucose");
-    setMax(Math.max(...data.map((d) => d.glucose)));
-    setMin(Math.min(...data.map((d) => d.glucose)));
+    if (data) {
+      setMax(Math.max(...data.map((d) => d.glucose)));
+      setMin(Math.min(...data.map((d) => d.glucose)));
+    }
   }
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        await axios
-          .get(
-            `${import.meta.env.VITE_URL}/log/filter/${timeFilter}/${dateValue}`
-          )
-          .then((res) => {
-            console.log(res.data);
-            setData(res.data);
-          });
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    fetchData();
-  }, [timeFilter, dateValue]);
 
   return (
     <ResponsiveContainer width="100%" height="100%">
