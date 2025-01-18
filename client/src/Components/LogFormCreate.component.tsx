@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios, { AxiosRequestConfig } from "axios";
 import React, { FormEvent, useState } from "react";
 import { FaCamera, FaSpinner } from "react-icons/fa";
 import { createDate, Log, modifyDate } from "../utils/util";
@@ -10,6 +10,16 @@ const initialState = {
   insulin: 0,
   note: "",
   photo: "",
+};
+
+const getAxiosConfig = (): AxiosRequestConfig => {
+  const token = sessionStorage.getItem("jwt");
+  return {
+    headers: {
+      Authorization: token,
+      "Content-Type": "application/json",
+    },
+  };
 };
 
 interface Props {
@@ -48,7 +58,11 @@ const LogFormCreate = ({ setToggle }: Props) => {
         setSubmitting(true);
 
         axios
-          .post(`${import.meta.env.VITE_URL}/log/create`, formData)
+          .post(
+            `${import.meta.env.VITE_URL}/api/log`,
+            formData,
+            getAxiosConfig()
+          )
           .then((res) => {
             if (res.status == 200) {
               console.log(res);

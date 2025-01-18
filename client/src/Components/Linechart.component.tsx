@@ -9,21 +9,31 @@ import {
 } from "recharts";
 import { graphTimeFilter, graphFilter, Log } from "../utils/util";
 import { useEffect, useState } from "react";
-import axios from "axios";
+import axios, { AxiosRequestConfig } from "axios";
 
 interface Props {
   typeFilter: graphFilter;
   timeFilter: graphTimeFilter;
 }
 
-const date = new Date();
+const getAxiosConfig = (): AxiosRequestConfig => {
+  const token = sessionStorage.getItem("jwt");
+  return {
+    headers: {
+      Authorization: token,
+      "Content-Type": "application/json",
+    },
+  };
+};
+
+const date = new Date(Date.now());
 
 const getMonth = () => {
   return "0" + (date.getMonth() + 1).toString();
 };
 
 const getDay = () => {
-  return "0" + date.getDay().toString();
+  return ("0" + date.getDate()).slice(-2);
 };
 
 const LineChartComponent = ({ typeFilter, timeFilter }: Props) => {
@@ -39,10 +49,14 @@ const LineChartComponent = ({ typeFilter, timeFilter }: Props) => {
       try {
         await axios
           .get(
-            `${import.meta.env.VITE_URL}/log/filter/${timeFilter}/${dateValue}`
+            `${
+              import.meta.env.VITE_URL
+            }/api/log/filter/${timeFilter}/${dateValue}`,
+            getAxiosConfig()
           )
           .then((res) => {
             console.log(res.data);
+            console.log(dateValue);
             setData(res.data);
           });
       } catch (error) {
@@ -63,11 +77,8 @@ const LineChartComponent = ({ typeFilter, timeFilter }: Props) => {
     setDateValue(getMonth());
   }
 
-  if (
-    timeFilter == graphTimeFilter.WEEK &&
-    dateValue != date.getDay().toString()
-  ) {
-    setDateValue(date.getDay().toString());
+  if (timeFilter == graphTimeFilter.WEEK && dateValue != getDay().toString()) {
+    setDateValue(getDay());
   }
 
   if (timeFilter == graphTimeFilter.DAY && dateValue != getDay()) {
@@ -110,8 +121,8 @@ const LineChartComponent = ({ typeFilter, timeFilter }: Props) => {
     <ResponsiveContainer width="100%" height="100%">
       <LineChart data={data} margin={{ right: 50, top: 50 }}>
         <CartesianGrid strokeDasharray="3 3" />
-        <XAxis dataKey="date" />
-        <YAxis dataKey={yAxis} domain={[min!, max!]} />
+        <XAxis dataKey="date" tick={false} />
+        <YAxis dataKey={yAxis} domain={[0, max!]} />
 
         <Legend />
         {typeFilter === graphFilter.CARBS || typeFilter === graphFilter.ALL ? (

@@ -1,8 +1,18 @@
-import axios from "axios";
+import axios, { AxiosRequestConfig } from "axios";
 import React, { FormEvent, useEffect, useState } from "react";
 import { FaCamera, FaSpinner } from "react-icons/fa";
 import { convertDateDefault, createDate, Log, modifyDate } from "../utils/util";
 import { IoMdClose } from "react-icons/io";
+
+const getAxiosConfig = (): AxiosRequestConfig => {
+  const token = sessionStorage.getItem("jwt");
+  return {
+    headers: {
+      Authorization: token,
+      "Content-Type": "application/json",
+    },
+  };
+};
 
 const initialState = {
   glucose: 0,
@@ -33,12 +43,15 @@ const LogFormEdit = ({ setToggle, id }: Props) => {
   };
 
   useEffect(() => {
-    axios.get(`${import.meta.env.VITE_URL}/log/view/${id}`).then((res) => {
-      setFormData(res.data);
-      if (res.data.date) {
-        setDateIfExists(res.data.date);
-      }
-    });
+    axios
+      .get(`${import.meta.env.VITE_URL}/api/log/${id}`, getAxiosConfig())
+      .then((res) => {
+        console.log(res.data);
+        setFormData(res.data);
+        if (res.data.date) {
+          setDateIfExists(res.data.date);
+        }
+      });
   }, [id]);
 
   const setDateIfExists = (date: string) => {
@@ -56,7 +69,11 @@ const LogFormEdit = ({ setToggle, id }: Props) => {
       setSubmitting(true);
 
       axios
-        .patch(`${import.meta.env.VITE_URL}/log/update/${id}`, formData)
+        .patch(
+          `${import.meta.env.VITE_URL}/api/log/${id}`,
+          formData,
+          getAxiosConfig()
+        )
         .then((res) => {
           if (res.status == 200) {
             console.log(res);

@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios, { AxiosRequestConfig } from "axios";
 import { useEffect, useState } from "react";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import { IoMdArrowDropdown, IoMdClose } from "react-icons/io";
@@ -9,6 +9,16 @@ interface Props {
   toggle: boolean;
   setState: (status: boolean) => void;
 }
+
+const getAxiosConfig = (): AxiosRequestConfig => {
+  const token = sessionStorage.getItem("jwt");
+  return {
+    headers: {
+      Authorization: token,
+      "Content-Type": "application/json",
+    },
+  };
+};
 
 const LogList = ({ toggle, setState }: Props) => {
   const [logs, setLogs] = useState<Log[]>([]);
@@ -26,9 +36,11 @@ const LogList = ({ toggle, setState }: Props) => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        await axios.get(`${import.meta.env.VITE_URL}/logTotal`).then((res) => {
-          setTotalPages(Math.ceil(res.data / 5));
-        });
+        await axios
+          .get(`${import.meta.env.VITE_URL}/api/log/count`, getAxiosConfig())
+          .then((res) => {
+            setTotalPages(Math.ceil(res.data / 5));
+          });
         setServerStatus(true);
       } catch (error) {
         console.log(error);
@@ -47,7 +59,10 @@ const LogList = ({ toggle, setState }: Props) => {
       }
       const fetchData = async () => {
         await axios
-          .get(`${import.meta.env.VITE_URL}/log/page/${page}`)
+          .get(
+            `${import.meta.env.VITE_URL}/api/log/page/${page}`,
+            getAxiosConfig()
+          )
           .then((res) => {
             setLogs(res.data);
             setServerStatus(true);
