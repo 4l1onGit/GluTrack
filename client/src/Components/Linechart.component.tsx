@@ -42,7 +42,6 @@ const LineChartComponent = ({ typeFilter, timeFilter }: Props) => {
   const [data, setData] = useState<Log[]>();
 
   const [max, setMax] = useState<number>();
-  const [min, setMin] = useState<number>();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -55,8 +54,6 @@ const LineChartComponent = ({ typeFilter, timeFilter }: Props) => {
             getAxiosConfig()
           )
           .then((res) => {
-            console.log(res.data);
-            console.log(dateValue);
             setData(res.data);
           });
       } catch (error) {
@@ -89,7 +86,6 @@ const LineChartComponent = ({ typeFilter, timeFilter }: Props) => {
     setYAxis("insulin");
     if (data) {
       setMax(Math.max(...data.map((d) => d.insulin)));
-      setMin(Math.min(...data.map((d) => d.insulin)));
     }
   }
 
@@ -101,11 +97,6 @@ const LineChartComponent = ({ typeFilter, timeFilter }: Props) => {
 
     if (data) {
       setMax(Math.max(...data.map((d) => d.carb)));
-      if (typeFilter != graphFilter.ALL) {
-        setMin(Math.min(...data.map((d) => d.carb)));
-      } else {
-        setMin(Math.min(...data.map((d) => d.insulin)));
-      }
     }
   }
 
@@ -113,7 +104,6 @@ const LineChartComponent = ({ typeFilter, timeFilter }: Props) => {
     setYAxis("glucose");
     if (data) {
       setMax(Math.max(...data.map((d) => d.glucose)));
-      setMin(Math.min(...data.map((d) => d.glucose)));
     }
   }
 
