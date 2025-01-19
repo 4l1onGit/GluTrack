@@ -1,7 +1,7 @@
-import axios, { AxiosRequestConfig } from "axios";
 import { useEffect, useState } from "react";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import { IoMdArrowDropdown, IoMdClose } from "react-icons/io";
+import { getLogsPage, getTotalLogs } from "../api/logApi";
 import { Log } from "../utils/util";
 import LogDropDown from "./LogDropDown.component";
 
@@ -9,16 +9,6 @@ interface Props {
   toggle: boolean;
   setState: (status: boolean) => void;
 }
-
-const getAxiosConfig = (): AxiosRequestConfig => {
-  const token = sessionStorage.getItem("jwt");
-  return {
-    headers: {
-      Authorization: token,
-      "Content-Type": "application/json",
-    },
-  };
-};
 
 const LogList = ({ toggle, setState }: Props) => {
   const [logs, setLogs] = useState<Log[]>([]);
@@ -34,47 +24,28 @@ const LogList = ({ toggle, setState }: Props) => {
   };
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        await axios
-          .get(`${import.meta.env.VITE_URL}/api/log/count`, getAxiosConfig())
-          .then((res) => {
-            setTotalPages(Math.ceil(res.data / 5));
-          })
-          .catch((e) => console.log(e));
-        setServerStatus(true);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    fetchData();
+    const data = getTotalLogs();
+    data
+      .then((res) => {
+        setTotalPages(Math.ceil(res / 5));
+      })
+      .catch((e) => console.log(e));
   }, [toggle, logs]);
 
   useEffect(() => {
-    try {
-      const fetchData = async () => {
-        await axios
-          .get(
-            `${import.meta.env.VITE_URL}/api/log/page/${page}`,
-            getAxiosConfig()
-          )
-          .then((res) => {
-            setLogs(res.data);
-            setServerStatus(true);
-            if (page < 1) {
-              setPage(1);
-            }
-            if (page > totalPages) {
-              setPage(totalPages);
-            }
-          })
-          .catch((e) => console.log(e));
-      };
-      fetchData();
-    } catch (error) {
-      console.log(error);
-      setServerStatus(false);
-    }
+    const data = getLogsPage(page);
+    data
+      .then((d) => {
+        setLogs(d);
+        setServerStatus(true);
+        if (page < 1) {
+          setPage(1);
+        }
+        if (page > totalPages) {
+          setPage(totalPages);
+        }
+      })
+      .catch((e) => console.log(e));
   }, [page, toggle]);
 
   const pagination = new Array(totalPages);

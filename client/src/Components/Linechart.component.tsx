@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import {
   CartesianGrid,
   Legend,
@@ -7,29 +8,18 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
-import { graphTimeFilter, graphFilter, Log } from "../utils/util";
-import { useEffect, useState } from "react";
-import axios, { AxiosRequestConfig } from "axios";
+import { getFilteredLogs } from "../api/logApi";
+import { graphFilter, graphTimeFilter, Log } from "../utils/util";
 
 interface Props {
   typeFilter: graphFilter;
   timeFilter: graphTimeFilter;
 }
 
-const getAxiosConfig = (): AxiosRequestConfig => {
-  const token = sessionStorage.getItem("jwt");
-  return {
-    headers: {
-      Authorization: token,
-      "Content-Type": "application/json",
-    },
-  };
-};
-
 const date = new Date(Date.now());
 
 const getMonth = () => {
-  return "0" + (date.getMonth() + 1).toString();
+  return ("0" + date.getMonth() + 1).slice(-2);
 };
 
 const getDay = () => {
@@ -44,23 +34,11 @@ const LineChartComponent = ({ typeFilter, timeFilter }: Props) => {
   const [max, setMax] = useState<number>();
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        await axios
-          .get(
-            `${
-              import.meta.env.VITE_URL
-            }/api/log/filter/${timeFilter}/${dateValue}`,
-            getAxiosConfig()
-          )
-          .then((res) => {
-            setData(res.data);
-          });
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    fetchData();
+    getFilteredLogs(timeFilter, dateValue!)
+      .then((d) => {
+        setData(d);
+      })
+      .catch((e) => console.log(e));
   }, [timeFilter, dateValue]);
 
   if (

@@ -1,6 +1,6 @@
-import axios from "axios";
 import { useState } from "react";
 import { MdDelete, MdEditSquare } from "react-icons/md";
+import { deleteLog } from "../api/logApi";
 import { Log } from "../utils/util";
 import LogFormEdit from "./LogFormEdit.component";
 
@@ -12,11 +12,7 @@ const LogDropDown = ({ log }: Props) => {
   const [toggle, setToggle] = useState(false);
 
   const handleDelete = () => {
-    axios
-      .delete(`${import.meta.env.VITE_URL}/log/delete/${log.id}`)
-      .then((res) => {
-        console.log(res);
-      });
+    deleteLog(log.id!).catch((e) => console.log(e));
   };
 
   return (

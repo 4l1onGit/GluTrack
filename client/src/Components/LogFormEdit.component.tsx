@@ -1,18 +1,8 @@
-import axios, { AxiosRequestConfig } from "axios";
 import React, { FormEvent, useEffect, useState } from "react";
 import { FaCamera, FaSpinner } from "react-icons/fa";
-import { convertDateDefault, createDate, Log, modifyDate } from "../utils/util";
 import { IoMdClose } from "react-icons/io";
-
-const getAxiosConfig = (): AxiosRequestConfig => {
-  const token = sessionStorage.getItem("jwt");
-  return {
-    headers: {
-      Authorization: token,
-      "Content-Type": "application/json",
-    },
-  };
-};
+import { getLog, updateLog } from "../api/logApi";
+import { convertDateDefault, createDate, Log, modifyDate } from "../utils/util";
 
 const initialState = {
   glucose: 0,
@@ -43,15 +33,12 @@ const LogFormEdit = ({ setToggle, id }: Props) => {
   };
 
   useEffect(() => {
-    axios
-      .get(`${import.meta.env.VITE_URL}/api/log/${id}`, getAxiosConfig())
-      .then((res) => {
-        console.log(res.data);
-        setFormData(res.data);
-        if (res.data.date) {
-          setDateIfExists(res.data.date);
-        }
-      });
+    getLog(id).then((d) => {
+      setFormData(d);
+      if (d.date) {
+        setDateIfExists(d.date);
+      }
+    });
   }, [id]);
 
   const setDateIfExists = (date: string) => {
@@ -65,31 +52,17 @@ const LogFormEdit = ({ setToggle, id }: Props) => {
       setFormData({ ...formData!, date: createDate() });
     }
 
-    try {
-      setSubmitting(true);
-
-      axios
-        .patch(
-          `${import.meta.env.VITE_URL}/api/log/${id}`,
-          formData,
-          getAxiosConfig()
-        )
-        .then((res) => {
-          if (res.status == 200) {
-            console.log(res);
-            setToggle(false);
-          }
-          setFormData({ ...initialState, id: undefined });
-          setSubmitting(false);
-        })
-        .catch((err) => {
-          console.log(err);
-          setSubmitting(false);
-        });
-    } catch (err) {
-      console.log(err);
-      setSubmitting(false);
-    }
+    setSubmitting(true);
+    updateLog(formData!)
+      .then(() => {
+        setToggle(false);
+        setFormData({ ...initialState, id: undefined });
+        setSubmitting(false);
+      })
+      .catch((e) => {
+        console.log(e);
+        setSubmitting(false);
+      });
   };
 
   return (
