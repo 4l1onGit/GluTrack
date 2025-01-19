@@ -40,23 +40,18 @@ const LogList = ({ toggle, setState }: Props) => {
           .get(`${import.meta.env.VITE_URL}/api/log/count`, getAxiosConfig())
           .then((res) => {
             setTotalPages(Math.ceil(res.data / 5));
-          });
+          })
+          .catch((e) => console.log(e));
         setServerStatus(true);
       } catch (error) {
         console.log(error);
       }
     };
     fetchData();
-  }, []);
+  }, [toggle, logs]);
 
   useEffect(() => {
     try {
-      if (page < 1) {
-        setPage(1);
-      }
-      if (page > totalPages) {
-        setPage(totalPages);
-      }
       const fetchData = async () => {
         await axios
           .get(
@@ -66,18 +61,27 @@ const LogList = ({ toggle, setState }: Props) => {
           .then((res) => {
             setLogs(res.data);
             setServerStatus(true);
-          });
+            if (page < 1) {
+              setPage(1);
+            }
+            if (page > totalPages) {
+              setPage(totalPages);
+            }
+          })
+          .catch((e) => console.log(e));
       };
       fetchData();
     } catch (error) {
       console.log(error);
       setServerStatus(false);
     }
-  }, [page, totalPages]);
+  }, [page, toggle]);
 
   const pagination = new Array(totalPages);
-  for (let i = 0; i < pagination.length; i++) {
-    pagination[i] = i;
+  if (totalPages > 1) {
+    for (let i = 0; i < pagination.length; i++) {
+      pagination[i] = i;
+    }
   }
 
   return (
@@ -96,7 +100,7 @@ const LogList = ({ toggle, setState }: Props) => {
         <button onClick={() => setState(false)}>
           <IoMdClose />
         </button>
-        {serverStatus ? (
+        {serverStatus && pagination.length > 1 ? (
           <ul className="flex justify-center w-full items-center h-12 space-x-1  rounded-lg">
             {page > 1 ? (
               <li className="flex items-center">
@@ -125,7 +129,7 @@ const LogList = ({ toggle, setState }: Props) => {
                 </button>
               </li>
             ))}
-            {page < totalPages ? (
+            {page < totalPages && pagination.length > 1 ? (
               <li className="flex items-center">
                 <button
                   className="text-white text-3xl"
@@ -143,7 +147,7 @@ const LogList = ({ toggle, setState }: Props) => {
         )}
         <div className="flex flex-col justify-center w-full h-full items-center">
           <ul className="w-full space-y-2 h-full">
-            {serverStatus ? (
+            {serverStatus && logs.length > 0 ? (
               logs.map((log) => (
                 <li
                   className="border-2 rounded-2xl border-customblue-600 bg-gradient-to-l from-customblue-800 to-customblue-900 w-full h-22"
@@ -183,6 +187,10 @@ const LogList = ({ toggle, setState }: Props) => {
                   </div>
                 </li>
               ))
+            ) : logs.length < 1 ? (
+              <li className="text-center uppercase text-md font-semibold">
+                No Logs
+              </li>
             ) : (
               <li className="text-center uppercase text-md font-semibold">
                 Server error
