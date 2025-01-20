@@ -45,10 +45,13 @@ const Login = () => {
   } else {
     return (
       <div className="flex flex-col justify-center p-4 items-center h-[100vh]">
-        <div className="flex flex-col bg-customblue-900 px-20 h-[40vh] items-center justify-center space-y-10 rounded-xl">
+        <div className="flex flex-col bg-gradient-to-b from-customblue-700 to-customblue-900 px-20 h-[40vh] items-center justify-center space-y-10 rounded-xl">
           <div className="flex flex-col space-y-2">
-            <label htmlFor="userInput">Email:</label>
+            <label className="text-sm font-bold" htmlFor="userInput">
+              Email
+            </label>
             <input
+              className="h-8 rounded-xl px-2"
               name="username"
               id="userInput"
               type="email"
@@ -56,8 +59,11 @@ const Login = () => {
             />
           </div>
           <div className="flex flex-col space-y-2">
-            <label htmlFor="passwordInput">Password:</label>
+            <label className="text-sm font-bold" htmlFor="passwordInput">
+              Password
+            </label>
             <input
+              className="h-8 rounded-xl px-2"
               name="password"
               id="passwordInput"
               type="password"
@@ -65,7 +71,7 @@ const Login = () => {
             />
           </div>
           <button
-            className="bg-white px-5 rounded-xl py-1"
+            className="bg-white px-5 rounded-xl py-1 font-semibold"
             onClick={handleLogin}
           >
             Login
