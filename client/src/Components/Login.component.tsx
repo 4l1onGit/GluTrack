@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import App from "../App";
 
 type User = {
@@ -33,11 +33,6 @@ const Login = () => {
         }
       })
       .catch();
-  };
-
-  const handleLogout = () => {
-    setAuth(false);
-    sessionStorage.setItem("jwt", "");
   };
 
   if (auth) {

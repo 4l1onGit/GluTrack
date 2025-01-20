@@ -18,8 +18,15 @@ const LogDropDown = ({ log }: Props) => {
   return (
     <div className="py-2">
       <ul>
-        <li>Note: </li>
-        <li className="text-sm py-2">{log.note}</li>
+        {log.note != "" ? (
+          <>
+            <li>Note: </li>
+            <li className="text-sm py-2">{log.note}</li>
+          </>
+        ) : (
+          ""
+        )}
+
         <li className="flex space-x-2 py-6">
           <button
             className="flex text-2xl px-2 py-1 rounded-lg w-20 bg-red-400 justify-center items-center"
