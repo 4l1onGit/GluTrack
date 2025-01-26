@@ -14,7 +14,6 @@ const ToggleButton = ({ btnData, setFilter, currentFilter }: Props) => {
       onClick={() => {
         //@ts-ignore
         setFilter(btnData.filter);
-        console.log(btnData.filter);
       }}
       className={`bg-gradient-to-b w-[25%] h-[3rem] lg:h-[4rem] rounded-xl font-bold text-xs shadow-lg text-blue-950 uppercase ${
         currentFilter == btnData.filter
