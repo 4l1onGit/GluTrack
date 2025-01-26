@@ -72,8 +72,8 @@ function App() {
     postCache();
   }
   if (
-    sessionStorage.getItem("jwt") == "" ||
-    sessionStorage.getItem("jwt") === null
+    sessionStorage.getItem("jwt") === null ||
+    sessionStorage.getItem("jwt") === ""
   ) {
     return <Login />;
   } else {

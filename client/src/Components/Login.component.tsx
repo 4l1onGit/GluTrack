@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import App from "../App";
 
 type User = {
@@ -14,6 +14,12 @@ const Login = () => {
   });
 
   const [auth, setAuth] = useState<boolean>(false);
+
+  useEffect(() => {
+    if (sessionStorage.getItem("jwt") !== null) {
+      setAuth(true);
+    }
+  }, []);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
@@ -35,8 +41,12 @@ const Login = () => {
       .catch();
   };
 
-  if (auth) {
-    return <App />;
+  if (
+    auth ||
+    (sessionStorage.getItem("jwt") !== null &&
+      sessionStorage.getItem("jwt") != "")
+  ) {
+    <App />;
   } else {
     return (
       <div className="flex flex-col justify-center p-4 items-center h-[100vh]">

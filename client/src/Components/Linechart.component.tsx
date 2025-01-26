@@ -60,30 +60,50 @@ const LineChartComponent = ({ typeFilter, timeFilter }: Props) => {
     setDateValue(getDay());
   }
 
-  if (typeFilter == graphFilter.INSULIN && yAxis != "insulin") {
-    setYAxis("insulin");
-    if (data) {
-      setMax(Math.max(...data.map((d) => d.insulin)));
-    }
-  }
+  useEffect(() => {
+    if (typeFilter == graphFilter.ALL) {
+      if (yAxis != "all") {
+        setYAxis("all");
+      }
 
-  if (
-    (typeFilter == graphFilter.CARBS || typeFilter == graphFilter.ALL) &&
-    yAxis != "carb"
-  ) {
-    setYAxis("carb");
-
-    if (data) {
-      setMax(Math.max(...data.map((d) => d.carb)));
+      if (data) {
+        const maxY = Math.max(
+          ...data.map((d) => d.carb),
+          ...data.map((d) => d.insulin),
+          ...data.map((d) => d.glucose)
+        );
+        setMax(maxY);
+      }
     }
-  }
-
-  if (typeFilter == graphFilter.BLOOD_SUGAR && yAxis != "glucose") {
-    setYAxis("glucose");
-    if (data) {
-      setMax(Math.max(...data.map((d) => d.glucose)));
+    if (typeFilter == graphFilter.INSULIN) {
+      if (yAxis != "insulin") {
+        setYAxis("insulin");
+      }
+      if (data) {
+        setMax(Math.max(...data.map((d) => d.insulin)));
+      }
     }
-  }
+
+    if (typeFilter == graphFilter.CARBS) {
+      if (yAxis != "carb") {
+        setYAxis("carb");
+      }
+
+      if (data) {
+        setMax(Math.max(...data.map((d) => d.carb)));
+      }
+    }
+
+    if (typeFilter == graphFilter.BLOOD_SUGAR) {
+      if (yAxis != "glucose") {
+        setYAxis("glucose");
+      }
+
+      if (data) {
+        setMax(Math.max(...data.map((d) => d.glucose)));
+      }
+    }
+  }, [dateValue, max, yAxis, typeFilter, data]);
 
   return (
     <ResponsiveContainer width="100%" height="100%">
