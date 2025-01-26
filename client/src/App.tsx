@@ -78,7 +78,7 @@ function App() {
     return <Login />;
   } else {
     return (
-      <div className="relative flex flex-col p-4 h-screen space-y-6 w-full mx-auto">
+      <div className="relative flex flex-col p-4 h-screen space-y-6 w-full mx-auto lg:items-center">
         <div
           className={
             toggleForm || toggleLogList
@@ -87,7 +87,7 @@ function App() {
           }
         ></div>
         <div
-          className={`rounded-xl p-2 w-full h-[16rem] drop-shadow-xl hover:bg-customblue-600 transition-colors  duration-150 ease-in-out ${
+          className={`rounded-xl p-2 w-full h-[16rem] lg:h-[40vh] lg:w-[40vw] drop-shadow-xl hover:bg-customblue-600 transition-colors  duration-150 ease-in-out ${
             toggleForm || toggleLogList
               ? ""
               : "bg-gradient-to-b from-customblue-700 to-customblue-500"
@@ -102,11 +102,11 @@ function App() {
             />
           )}
         </div>
-        <div className="flex justify-center space-x-4 w-full">
+        <div className="flex justify-center space-x-4 w-full lg:w-[40vw]">
           {graphTimeToggles.map((item) => (
             <button
               onClick={() => setTimeFilter(item.filter)}
-              className={`bg-gradient-to-b  w-[25%] h-[3rem] rounded-xl font-bold text-xs shadow-lg text-blue-950 uppercase ${
+              className={`bg-gradient-to-b w-[25%] h-[3rem] lg:h-[4rem] rounded-xl font-bold text-xs shadow-lg text-blue-950 uppercase ${
                 timeFilter == item.filter
                   ? item.style
                   : "from-customblue-700 to-customblue-500"
@@ -119,11 +119,11 @@ function App() {
             </button>
           ))}
         </div>
-        <div className="flex justify-center space-x-4 w-full">
+        <div className="flex justify-center space-x-4 w-full lg:w-[40vw]">
           {graphToggles.map((item) => (
             <button
               onClick={() => setFilterType(item.filter)}
-              className={`bg-gradient-to-b from-customblue-700 to-customblue-500 w-[25%] h-[3rem] rounded-xl font-bold text-xs shadow-lg text-blue-950 uppercase ${
+              className={`bg-gradient-to-b from-customblue-700 to-customblue-500 w-[25%] h-[3rem] lg:h-[4rem] rounded-xl font-bold text-xs shadow-lg text-blue-950 uppercase ${
                 filterType == item.filter
                   ? item.style
                   : "from-customblue-700 to-customblue-500"
@@ -137,7 +137,7 @@ function App() {
             </button>
           ))}
         </div>
-        <div className="flex justify-center space-x-4 w-full">
+        <div className="flex justify-center space-x-4 w-full lg:w-[40vw]">
           <button
             onClick={() => setToggleForm(!toggleForm)}
             className="bg-gradient-to-b from-customblue-700 to-customblue-500 w-full h-[8rem]  text-[4.5rem] flex justify-center items-center text-opacity-70 shadow-lg rounded-xl hover:bg-customblue-600 transition-colors duration-150 ease-in-out font-bold text-blue-950"
@@ -148,7 +148,7 @@ function App() {
             </div>
           </button>
         </div>
-        <div className="flex space-x-4 w-full h-[13rem]">
+        <div className="flex space-x-4 w-full h-[13rem] lg:w-[40vw] lg:h-[16vh]">
           <button
             onClick={() => setToggleLogList(!toggleLogList)}
             className="bg-gradient-to-br from-customblue-700 to-customblue-500 shadow-lg w-full text-[4rem] text-opacity-70 flex justify-center items-center rounded-xl hover:bg-customblue-600 transition-colors duration-150 ease-in-out text-center text-blue-950 font-bold"

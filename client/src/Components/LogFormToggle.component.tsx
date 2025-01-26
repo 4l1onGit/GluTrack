@@ -11,7 +11,7 @@ const LogFormToggle = ({ toggle, setToggle }: Props) => {
     <div
       className={
         toggle
-          ? "bg-gradient-to-t from-customblue-600 to-customblue-800 flex absolute inset-x-0 bottom-0 w-full h-[70%] max-h-[70%] items-center border-b-customblue-500 rounded-t-2xl border-t-2 transition-all duration-300 border-blue-200"
+          ? "bg-gradient-to-t from-customblue-600 to-customblue-800 flex absolute inset-x-0 bottom-0 w-full h-[70%] max-h-[70%] lg:w-[30vw] lg:h-[65vh] lg:mx-auto items-center border-b-customblue-500 rounded-t-2xl border-t-2 transition-all duration-300 border-blue-200"
           : "max-h-0"
       }
     >
