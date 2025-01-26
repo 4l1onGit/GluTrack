@@ -104,7 +104,15 @@ const LineChartComponent = ({ typeFilter, timeFilter }: Props) => {
       }
     }
   }, [dateValue, max, yAxis, typeFilter, data]);
-
+  if (data?.length == 0) {
+    return (
+      <div className="flex justify-center items-center h-full">
+        <h2 className="text-2xl font-semibold uppercase text-blue-950 tracking-wider">
+          No Logs
+        </h2>
+      </div>
+    );
+  }
   return (
     <ResponsiveContainer width="100%" height="100%">
       <LineChart data={data} margin={{ right: 50, top: 50 }}>
