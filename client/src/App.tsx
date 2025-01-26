@@ -7,10 +7,16 @@ import { RiBreadLine } from "react-icons/ri";
 import LineChartComponent from "./Components/Linechart.component";
 import LogFormToggle from "./Components/LogFormToggle.component";
 import LogList from "./Components/LogList.component";
-import { graphFilter, graphTimeFilter, postCache } from "./utils/util";
+import {
+  btnToggles,
+  graphFilter,
+  graphTimeFilter,
+  postCache,
+} from "./utils/util";
 import Login from "./Components/Login.component";
+import FilterRow from "./Components/FiltersRow.component";
 
-const graphToggles = [
+const graphToggles: btnToggles[] = [
   {
     label: "Sugar",
     style: "from-orange-200 to-orange-300",
@@ -37,7 +43,7 @@ const graphToggles = [
   },
 ];
 
-const graphTimeToggles = [
+const graphTimeToggles: btnToggles[] = [
   {
     label: "Day",
     style: "from-orange-200 to-orange-300",
@@ -102,41 +108,17 @@ function App() {
             />
           )}
         </div>
-        <div className="flex justify-center space-x-4 w-full lg:w-[40vw]">
-          {graphTimeToggles.map((item) => (
-            <button
-              onClick={() => setTimeFilter(item.filter)}
-              className={`bg-gradient-to-b w-[25%] h-[3rem] lg:h-[4rem] rounded-xl font-bold text-xs shadow-lg text-blue-950 uppercase ${
-                timeFilter == item.filter
-                  ? item.style
-                  : "from-customblue-700 to-customblue-500"
-              }`}
-              key={item.label}
-            >
-              <div className="flex justify-center">
-                <p className="p-1">{item.label}</p>{" "}
-              </div>
-            </button>
-          ))}
-        </div>
-        <div className="flex justify-center space-x-4 w-full lg:w-[40vw]">
-          {graphToggles.map((item) => (
-            <button
-              onClick={() => setFilterType(item.filter)}
-              className={`bg-gradient-to-b from-customblue-700 to-customblue-500 w-[25%] h-[3rem] lg:h-[4rem] rounded-xl font-bold text-xs shadow-lg text-blue-950 uppercase ${
-                filterType == item.filter
-                  ? item.style
-                  : "from-customblue-700 to-customblue-500"
-              }`}
-              key={item.label}
-            >
-              <div className="flex justify-center">
-                <p className="p-1">{item.label}</p>{" "}
-                <span className="text-xs">{item.icon}</span>
-              </div>
-            </button>
-          ))}
-        </div>
+        <FilterRow
+          btnsData={graphTimeToggles}
+          currentFilter={timeFilter}
+          setFilter={setTimeFilter}
+        />
+        <FilterRow
+          btnsData={graphToggles}
+          currentFilter={filterType}
+          setFilter={setFilterType}
+        />
+
         <div className="flex justify-center space-x-4 w-full lg:w-[40vw]">
           <button
             onClick={() => setToggleForm(!toggleForm)}

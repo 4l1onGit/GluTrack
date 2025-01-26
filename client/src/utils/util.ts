@@ -84,3 +84,10 @@ export const enum graphTimeFilter {
   MONTH = "month",
   YEAR = "year",
 }
+
+export type btnToggles = {
+  label: string;
+  style: string;
+  filter: graphFilter | graphTimeFilter;
+  icon?: React.ReactNode;
+};
