@@ -17,6 +17,7 @@ const LogList = ({ toggle, setState }: Props) => {
   const [totalPages, setTotalPages] = useState(1);
   const [selectedLog, setSelectedLog] = useState<Log>();
   const [togglePopup, setTogglePopup] = useState(false);
+  const [totalLogs, setTotalLogs] = useState(0);
 
   const handleSelectedLog = (log: Log) => {
     setSelectedLog(log);
@@ -27,26 +28,25 @@ const LogList = ({ toggle, setState }: Props) => {
     const data = getTotalLogs();
     data
       .then((res) => {
-        setTotalPages(Math.ceil(res / 5));
+        setTotalLogs(res);
+        if (res > 0) {
+          setTotalPages(Math.ceil(res / 5));
+        }
       })
       .catch((e) => console.log(e));
-  }, [toggle, logs]);
+  }, [toggle]);
 
   useEffect(() => {
-    const data = getLogsPage(page);
-    data
-      .then((d) => {
-        setLogs(d);
-        setServerStatus(true);
-        if (page < 1) {
-          setPage(1);
-        }
-        if (page > totalPages) {
-          setPage(totalPages);
-        }
-      })
-      .catch((e) => console.log(e));
-  }, [page, toggle]);
+    if (totalLogs > 0) {
+      const data = getLogsPage(page);
+      data
+        .then((d) => {
+          setLogs(d);
+          setServerStatus(true);
+        })
+        .catch((e) => console.log(e));
+    }
+  }, [page, totalLogs]);
 
   const pagination = new Array(totalPages);
   if (totalPages > 1) {
@@ -86,20 +86,24 @@ const LogList = ({ toggle, setState }: Props) => {
               ""
             )}
 
-            {pagination.map((_, index) => (
-              <li key={index}>
-                <button
-                  className={`px-3 border-2 border-none rounded-md font-semibold text-xl text-blue-950 ${
-                    page == index + 1
-                      ? " bg-gradient-to-l from-customblue-800 to-customblue-900 text-white"
-                      : "bg-white"
-                  }`}
-                  onClick={() => setPage(index + 1)}
-                >
-                  {index + 1}
-                </button>
-              </li>
-            ))}
+            {serverStatus && pagination.length
+              ? pagination.map((_, index) => (
+                  <li key={index}>
+                    <button
+                      className={`px-3 border-2 border-none rounded-md font-semibold text-xl text-blue-950 ${
+                        page == index + 1
+                          ? " bg-gradient-to-l from-customblue-800 to-customblue-900 text-white"
+                          : "bg-white"
+                      }`}
+                      onClick={() => {
+                        if (index + 1 <= totalPages) setPage(index + 1);
+                      }}
+                    >
+                      {index + 1}
+                    </button>
+                  </li>
+                ))
+              : ""}
             {page < totalPages && pagination.length > 1 ? (
               <li className="flex items-center">
                 <button
