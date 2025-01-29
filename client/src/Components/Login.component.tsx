@@ -13,6 +13,8 @@ const Login = () => {
     password: "",
   });
 
+  const [registerToggle, setRegisterToggle] = useState<boolean>(false);
+
   const [auth, setAuth] = useState<boolean>(false);
 
   useEffect(() => {
@@ -27,18 +29,33 @@ const Login = () => {
   };
 
   const handleLogin = async () => {
-    axios
-      .post(`${import.meta.env.VITE_URL}/api/login`, user, {
-        headers: { "Content-Type": "application/json" },
-      })
-      .then((res) => {
-        const token = res.data.token;
-        if (token != null) {
-          sessionStorage.setItem("jwt", token);
-          setAuth(true);
-        }
-      })
-      .catch();
+    if (registerToggle) {
+      axios
+        .post(`${import.meta.env.VITE_URL}/api/register`, user, {
+          headers: { "Content-Type": "application/json" },
+        })
+        .then((res) => {
+          const token = res.data.token;
+          if (token != null) {
+            sessionStorage.setItem("jwt", token);
+            setAuth(true);
+          }
+        })
+        .catch();
+    } else {
+      axios
+        .post(`${import.meta.env.VITE_URL}/api/login`, user, {
+          headers: { "Content-Type": "application/json" },
+        })
+        .then((res) => {
+          const token = res.data.token;
+          if (token != null) {
+            sessionStorage.setItem("jwt", token);
+            setAuth(true);
+          }
+        })
+        .catch();
+    }
   };
 
   if (
@@ -50,7 +67,13 @@ const Login = () => {
   } else {
     return (
       <div className="flex flex-col justify-center p-4 items-center h-[100vh]">
-        <div className="flex flex-col bg-gradient-to-b from-customblue-700 to-customblue-900 px-20 h-[40vh] items-center justify-center space-y-10 rounded-xl">
+        <div className="flex flex-col bg-gradient-to-b from-customblue-700 to-customblue-900 px-20 h-[40vh] items-center justify-center space-y-4 rounded-xl">
+          <button
+            onClick={() => setRegisterToggle(!registerToggle)}
+            className=" px-4 py-1 w-24 text-center"
+          >
+            {registerToggle ? "Login?" : "Register?"}
+          </button>
           <div className="flex flex-col space-y-2">
             <label className="text-sm font-bold" htmlFor="userInput">
               Email
@@ -79,7 +102,7 @@ const Login = () => {
             className="bg-white px-5 rounded-xl py-1 font-semibold"
             onClick={handleLogin}
           >
-            Login
+            {registerToggle ? "Register" : "Login"}
           </button>
         </div>
       </div>
