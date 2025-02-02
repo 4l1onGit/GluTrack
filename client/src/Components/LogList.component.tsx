@@ -4,6 +4,7 @@ import { IoMdArrowDropdown, IoMdClose } from "react-icons/io";
 import { getLogsPage, getTotalLogs } from "../api/logApi";
 import { Log } from "../utils/util";
 import LogDropDown from "./LogDropDown.component";
+import ListFilters from "./ListFilters.component";
 
 interface Props {
   toggle: boolean;
@@ -68,58 +69,62 @@ const LogList = ({ toggle, setState }: Props) => {
           toggle ? "flex flex-col w-full items-end p-4 space-y-4" : "hidden"
         }
       >
-        <button onClick={() => setState(false)}>
+        <button onClick={() => setState(false)} className="text-xl">
           <IoMdClose />
         </button>
-        {serverStatus && pagination.length > 1 ? (
-          <ul className="flex justify-center w-full items-center h-12 space-x-1  rounded-lg">
-            {page > 1 ? (
-              <li className="flex items-center">
-                <button
-                  className="text-white text-3xl "
-                  onClick={() => setPage(page - 1)}
-                >
-                  <FaChevronLeft />
-                </button>
-              </li>
-            ) : (
-              ""
-            )}
+        <div className="flex flex-col items-center w-full h-24 justify-center space-y-2">
+          {serverStatus && pagination.length > 1 ? (
+            <ul className="flex justify-center w-full items-center h-12 space-x-2 rounded-lg ">
+              {page > 1 ? (
+                <li className="flex items-center">
+                  <button
+                    className="text-blue-950 bg-white text-xl p-1 rounded-3xl "
+                    onClick={() => setPage(page - 1)}
+                  >
+                    <FaChevronLeft />
+                  </button>
+                </li>
+              ) : (
+                ""
+              )}
 
-            {serverStatus && pagination.length
-              ? pagination.map((_, index) => (
-                  <li key={index}>
-                    <button
-                      className={`px-3 border-2 border-none rounded-md font-semibold text-xl text-blue-950 ${
-                        page == index + 1
-                          ? " bg-gradient-to-l from-customblue-800 to-customblue-900 text-white"
-                          : "bg-white"
-                      }`}
-                      onClick={() => {
-                        if (index + 1 <= totalPages) setPage(index + 1);
-                      }}
-                    >
-                      {index + 1}
-                    </button>
-                  </li>
-                ))
-              : ""}
-            {page < totalPages && pagination.length > 1 ? (
-              <li className="flex items-center">
-                <button
-                  className="text-white text-3xl"
-                  onClick={() => setPage(page + 1)}
-                >
-                  <FaChevronRight />
-                </button>
-              </li>
-            ) : (
-              ""
-            )}
-          </ul>
-        ) : (
-          ""
-        )}
+              {serverStatus && pagination.length
+                ? pagination.map((_, index) => (
+                    <li key={index}>
+                      <button
+                        className={`px-3  rounded-3xl font-semibold text-xl text-blue-950 ${
+                          page == index + 1
+                            ? " bg-gradient-to-l from-customblue-800 to-customblue-900 text-white"
+                            : "bg-white"
+                        }`}
+                        onClick={() => {
+                          if (index + 1 <= totalPages) setPage(index + 1);
+                        }}
+                      >
+                        {index + 1}
+                      </button>
+                    </li>
+                  ))
+                : ""}
+              {page < totalPages && pagination.length > 1 ? (
+                <li className="flex items-center">
+                  <button
+                    className="text-blue-950 bg-white text-xl p-1 rounded-3xl"
+                    onClick={() => setPage(page + 1)}
+                  >
+                    <FaChevronRight />
+                  </button>
+                </li>
+              ) : (
+                ""
+              )}
+            </ul>
+          ) : (
+            ""
+          )}
+
+          <ListFilters />
+        </div>
         <div className="flex flex-col justify-center w-full h-full items-center">
           <ul className="w-full space-y-2 h-full">
             {serverStatus && logs.length > 0 ? (
