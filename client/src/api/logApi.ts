@@ -7,6 +7,7 @@ const getAxiosConfig = (): AxiosRequestConfig => {
     headers: {
       Authorization: token,
       "Content-Type": "application/json",
+      "Access-Control-Allow-Origin" : "*"
     },
   };
 };
