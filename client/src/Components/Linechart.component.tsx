@@ -1,3 +1,4 @@
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import {
   CartesianGrid,
@@ -9,8 +10,7 @@ import {
   YAxis,
 } from "recharts";
 import { getFilteredLogs } from "../api/logApi";
-import { graphFilter, graphTimeFilter, Log } from "../utils/util";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { graphFilter, graphTimeFilter } from "../utils/util";
 
 interface Props {
   typeFilter: graphFilter;
