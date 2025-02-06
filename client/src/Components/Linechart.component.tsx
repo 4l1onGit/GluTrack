@@ -146,7 +146,7 @@ const LineChartComponent = ({ typeFilter, timeFilter }: Props) => {
           <Line
             type="monotone"
             dataKey="carb"
-            stroke="#92ffad"
+            stroke="#009124"
             strokeWidth={3}
           />
         ) : null}
@@ -155,7 +155,7 @@ const LineChartComponent = ({ typeFilter, timeFilter }: Props) => {
           <Line
             type="monotone"
             dataKey="glucose"
-            stroke="#ffbc3f"
+            stroke="#64005e"
             strokeWidth={3}
           />
         ) : null}
@@ -164,7 +164,7 @@ const LineChartComponent = ({ typeFilter, timeFilter }: Props) => {
           <Line
             type="monotone"
             dataKey="insulin"
-            stroke="#fffd6d"
+            stroke="#bb2c00"
             strokeWidth={3}
           />
         ) : null}
