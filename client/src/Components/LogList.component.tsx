@@ -35,12 +35,12 @@ const LogList = ({ toggle, setState }: Props) => {
     isError: logsDataError,
   } = useQuery({
     queryFn: () => getLogsPage(page),
-    queryKey: ["logsPaged"],
+    queryKey: ["logsPaged", { page }],
   });
 
   useEffect(() => {
     queryClient.invalidateQueries({ queryKey: ["logsPaged"] });
-  }, [page]);
+  }, [page, queryClient, totalLogs]);
 
   const handleSelectedLog = (log: Log) => {
     setSelectedLog(log);

@@ -34,7 +34,7 @@ const LogFormCreate = ({ setToggle }: Props) => {
   const { mutateAsync } = useMutation({
     mutationFn: addLog,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["logsPaged", "logsTotal"] });
+      queryClient.invalidateQueries({ queryKey: ["logsTotal"] });
     },
   });
 
