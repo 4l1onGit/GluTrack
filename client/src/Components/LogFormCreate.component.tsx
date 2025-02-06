@@ -1,6 +1,7 @@
-import axios, { AxiosRequestConfig } from "axios";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import React, { FormEvent, useState } from "react";
 import { FaCamera, FaSpinner } from "react-icons/fa";
+import { addLog } from "../api/logApi";
 import { createDate, Log, modifyDate } from "../utils/util";
 
 const initialState = {
@@ -12,21 +13,12 @@ const initialState = {
   photo: "",
 };
 
-const getAxiosConfig = (): AxiosRequestConfig => {
-  const token = sessionStorage.getItem("jwt");
-  return {
-    headers: {
-      Authorization: token,
-      "Content-Type": "application/json",
-    },
-  };
-};
-
 interface Props {
   setToggle: (status: boolean) => void;
 }
 
 const LogFormCreate = ({ setToggle }: Props) => {
+  const queryClient = useQueryClient();
   const [dateInput, setDateInput] = useState("");
   const [formData, setFormData] = useState<Log>({
     id: undefined,
@@ -39,6 +31,13 @@ const LogFormCreate = ({ setToggle }: Props) => {
   });
   const [submitting, setSubmitting] = useState<boolean>(false);
 
+  const { mutateAsync } = useMutation({
+    mutationFn: addLog,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["logsPaged", "logsTotal"] });
+    },
+  });
+
   const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({
       ...formData!,
@@ -47,37 +46,22 @@ const LogFormCreate = ({ setToggle }: Props) => {
     setDateInput(e.target.value);
   };
 
-  const handleSubmission = (e: FormEvent) => {
+  const handleSubmission = async (e: FormEvent) => {
     e.preventDefault();
 
     if (formData?.date == "" || formData?.date.length != 14) {
       setFormData({ ...formData!, date: createDate() });
     }
+
     if (navigator.onLine) {
       try {
-        setSubmitting(true);
-
-        axios
-          .post(
-            `${import.meta.env.VITE_URL}/api/log`,
-            formData,
-            getAxiosConfig()
-          )
-          .then((res) => {
-            if (res.status == 200) {
-              console.log(res);
-              setToggle(false);
-            }
-            setFormData({ ...initialState, id: undefined });
-            setSubmitting(false);
-          })
-          .catch((err) => {
-            console.log(err);
-            setSubmitting(false);
-          });
-      } catch (err) {
-        console.log(err);
-        setSubmitting(false);
+        const res = await mutateAsync(formData);
+        if (res.status == 200) {
+          setToggle(false);
+        }
+        setFormData({ ...initialState, id: undefined });
+      } catch (e) {
+        console.log(e);
       }
     } else {
       try {

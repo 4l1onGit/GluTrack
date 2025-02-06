@@ -1,4 +1,4 @@
-import axios, { AxiosRequestConfig } from "axios";
+import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
 import { Log } from "../utils/util";
 
 const getAxiosConfig = (): AxiosRequestConfig => {
@@ -52,10 +52,10 @@ export const getFilteredLogs = async (filter: string, value: string): Promise<Lo
 
 // POST
 
-export const addLog = async (log: Log): Promise<Log> => {
+export const addLog = async (log: Log): Promise<AxiosResponse> => {
   const response = await axios.post(`${import.meta.env.VITE_URL}/api/log`, log, getAxiosConfig());
 
-  return response.data;
+  return response;
 }
 
 

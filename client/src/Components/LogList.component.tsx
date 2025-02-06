@@ -1,5 +1,5 @@
-import { useQuery } from "@tanstack/react-query";
-import { useState } from "react";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useEffect, useState } from "react";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import { IoMdArrowDropdown } from "react-icons/io";
 import { getLogsPage, getTotalLogs } from "../api/logApi";
@@ -14,11 +14,11 @@ interface Props {
 }
 
 const LogList = ({ toggle, setState }: Props) => {
-  const [page, setPage] = useState(1);
+  const queryClient = useQueryClient();
 
+  const [page, setPage] = useState(1);
   const [selectedLog, setSelectedLog] = useState<Log>();
   const [togglePopup, setTogglePopup] = useState(false);
-  // const [totalLogs, setTotalLogs] = useState(0);
 
   const {
     data: totalLogs,
@@ -38,36 +38,16 @@ const LogList = ({ toggle, setState }: Props) => {
     queryKey: ["logsPaged"],
   });
 
+  useEffect(() => {
+    queryClient.invalidateQueries({ queryKey: ["logsPaged"] });
+  }, [page]);
+
   const handleSelectedLog = (log: Log) => {
     setSelectedLog(log);
     setTogglePopup(!togglePopup);
   };
 
-  // useEffect(() => {
-  //   const data = getTotalLogs();
-  //   data
-  //     .then((res) => {
-  //       setTotalLogs(res);
-  //       if (res > 0) {
-  //         setTotalPages(Math.ceil(res / 5));
-  //       }
-  //     })
-  //     .catch((e) => console.log(e));
-  // }, [toggle]);
-
-  // useEffect(() => {
-  //   if (totalLogs > 0) {
-  //     const data = getLogsPage(page);
-  //     data
-  //       .then((d) => {
-  //         setLogs(d);
-  //         setServerStatus(true);
-  //       })
-  //       .catch((e) => console.log(e));
-  //   }
-  // }, [page, totalLogs]);
-
-  const pagination = new Array(totalLogs);
+  const pagination = new Array(Math.ceil(totalLogs! / 5));
   if (Math.ceil(totalLogs! / 5) > 1) {
     for (let i = 0; i < pagination.length; i++) {
       pagination[i] = i;
