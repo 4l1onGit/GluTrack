@@ -10,6 +10,7 @@ import {
 } from "recharts";
 import { getFilteredLogs } from "../api/logApi";
 import { graphFilter, graphTimeFilter, Log } from "../utils/util";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 
 interface Props {
   typeFilter: graphFilter;
@@ -19,7 +20,7 @@ interface Props {
 const date = new Date(Date.now());
 
 const getMonth = () => {
-  return ("0" + date.getMonth() + 1).slice(-2);
+  return ("0" + (date.getMonth() + 1)).slice(-2);
 };
 
 const getDay = () => {
@@ -27,18 +28,19 @@ const getDay = () => {
 };
 
 const LineChartComponent = ({ typeFilter, timeFilter }: Props) => {
-  const [dateValue, setDateValue] = useState<string>();
+  const [dateValue, setDateValue] = useState<string>(getDay());
   const [yAxis, setYAxis] = useState<string>("carb");
-  const [data, setData] = useState<Log[]>();
+  const queryClient = useQueryClient();
 
   const [max, setMax] = useState<number>();
 
+  const { data, isLoading, isError } = useQuery({
+    queryFn: () => getFilteredLogs(timeFilter, dateValue),
+    queryKey: ["logsGraphFilter"],
+  });
+
   useEffect(() => {
-    getFilteredLogs(timeFilter, dateValue!)
-      .then((d) => {
-        setData(d);
-      })
-      .catch((e) => console.log(e));
+    queryClient.invalidateQueries({ queryKey: ["logsGraphFilter"] });
   }, [timeFilter, dateValue]);
 
   if (
@@ -104,11 +106,30 @@ const LineChartComponent = ({ typeFilter, timeFilter }: Props) => {
       }
     }
   }, [dateValue, max, yAxis, typeFilter, data]);
+
   if (data?.length == 0) {
     return (
       <div className="flex justify-center items-center h-full">
         <h2 className="text-2xl font-semibold uppercase text-blue-950 tracking-wider">
           No Logs
+        </h2>
+      </div>
+    );
+  }
+  if (isError) {
+    return (
+      <div className="flex justify-center items-center h-full">
+        <h2 className="text-2xl font-semibold uppercase text-blue-950 tracking-wider">
+          Error
+        </h2>
+      </div>
+    );
+  }
+  if (isLoading) {
+    return (
+      <div className="flex justify-center items-center h-full">
+        <h2 className="text-2xl font-semibold uppercase text-blue-950 tracking-wider">
+          Loading...
         </h2>
       </div>
     );

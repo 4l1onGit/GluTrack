@@ -93,20 +93,13 @@ function App() {
           }
         ></div>
         <div
-          className={`rounded-xl p-2 w-full h-[16rem] lg:h-[40vh] lg:w-[40vw] drop-shadow-xl hover:bg-customblue-600 transition-colors  duration-150 ease-in-out ${
+          className={
             toggleForm || toggleLogList
-              ? ""
-              : "bg-gradient-to-b from-customblue-700 to-customblue-500"
-          }`}
+              ? "transition-all duration-150 ease-out opacity-0"
+              : `bg-gradient-to-b from-customblue-700 to-customblue-500 rounded-xl p-2 w-full h-[16rem] lg:h-[40vh] lg:w-[40vw] drop-shadow-xl hover:bg-customblue-600 transition-all opacity-100 duration-500 ease-linear`
+          }
         >
-          {toggleForm || toggleLogList ? (
-            ""
-          ) : (
-            <LineChartComponent
-              typeFilter={filterType}
-              timeFilter={timeFilter}
-            />
-          )}
+          <LineChartComponent typeFilter={filterType} timeFilter={timeFilter} />
         </div>
         <FilterRow
           btnsData={graphTimeToggles}
