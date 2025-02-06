@@ -1,16 +1,17 @@
-import { createContext, StrictMode } from "react";
+import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import App from "./App.tsx";
 import Navbar from "./Components/Navbar.component.tsx";
 import "./main.css";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
-const ToggleEditPopupContext = createContext<boolean>(false);
+const queryClient = new QueryClient();
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    <Navbar />
-    <ToggleEditPopupContext.Provider value={false}>
+    <QueryClientProvider client={queryClient}>
+      <Navbar />
       <App />
-    </ToggleEditPopupContext.Provider>
+    </QueryClientProvider>
   </StrictMode>
 );

@@ -10,6 +10,8 @@ export interface Log {
     note: string;
   }
 
+
+
   export function createDate() {
     const date = new Date();
     const day = date.getDate();
@@ -90,4 +92,10 @@ export type btnToggles = {
   style: string;
   filter: graphFilter | graphTimeFilter;
   icon?: React.ReactNode;
+};
+
+
+export type User = {
+  username: string;
+  password: string;
 };

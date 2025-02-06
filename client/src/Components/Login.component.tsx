@@ -1,5 +1,6 @@
-import axios from "axios";
-import { useEffect, useState } from "react";
+import { useMutation } from "@tanstack/react-query";
+import { useState } from "react";
+import { loginUser, registerUser } from "../api/userApi";
 import App from "../App";
 
 type User = {
@@ -17,53 +18,33 @@ const Login = () => {
 
   const [auth, setAuth] = useState<boolean>(false);
 
-  useEffect(() => {
-    if (sessionStorage.getItem("jwt") !== null) {
-      setAuth(true);
-    }
-  }, []);
-
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
     setUser({ ...user, [e.target.name]: e.target.value });
   };
 
+  const { mutateAsync: authMutation } = useMutation({
+    mutationFn: registerToggle ? registerUser : loginUser,
+  });
+
   const handleLogin = async () => {
-    if (registerToggle) {
-      axios
-        .post(`${import.meta.env.VITE_URL}/api/register`, user, {
-          headers: { "Content-Type": "application/json" },
-        })
-        .then((res) => {
-          const token = res.data.token;
-          if (token != null) {
-            sessionStorage.setItem("jwt", token);
-            setAuth(true);
-          }
-        })
-        .catch();
-    } else {
-      axios
-        .post(`${import.meta.env.VITE_URL}/api/login`, user, {
-          headers: { "Content-Type": "application/json" },
-        })
-        .then((res) => {
-          const token = res.data.token;
-          if (token != null) {
-            sessionStorage.setItem("jwt", token);
-            setAuth(true);
-          }
-        })
-        .catch();
+    try {
+      const token = (await authMutation(user)).token;
+      if (token != null) {
+        sessionStorage.setItem("jwt", token);
+        setAuth(true);
+        setUser({
+          username: "",
+          password: "",
+        });
+      }
+    } catch (e) {
+      console.log(e);
     }
   };
 
-  if (
-    auth ||
-    (sessionStorage.getItem("jwt") !== null &&
-      sessionStorage.getItem("jwt") != "")
-  ) {
-    <App />;
+  if (auth) {
+    return <App />;
   } else {
     return (
       <div className="flex flex-col justify-center p-4 items-center h-[100vh]">
