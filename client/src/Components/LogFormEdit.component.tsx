@@ -34,8 +34,6 @@ const LogFormEdit = ({ setToggle, log }: Props) => {
     },
   });
 
-  console.log(log);
-
   useEffect(() => {
     if (log.date) {
       setDateIfExists(log.date);
