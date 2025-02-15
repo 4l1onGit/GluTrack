@@ -48,7 +48,7 @@ const LogDropDown = ({ log }: Props) => {
                 toggle ? "visibile bg-black/20" : "invsible"
               }`}
             >
-              <LogFormEdit setToggle={() => setToggle(!toggle)} id={log.id!} />
+              <LogFormEdit setToggle={() => setToggle(!toggle)} log={log} />
             </div>
           ) : (
             ""

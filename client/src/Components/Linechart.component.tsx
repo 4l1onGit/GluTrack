@@ -1,4 +1,4 @@
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import {
   CartesianGrid,
@@ -30,18 +30,13 @@ const getDay = () => {
 const LineChartComponent = ({ typeFilter, timeFilter }: Props) => {
   const [dateValue, setDateValue] = useState<string>(getDay());
   const [yAxis, setYAxis] = useState<string>("carb");
-  const queryClient = useQueryClient();
 
   const [max, setMax] = useState<number>();
 
   const { data, isLoading, isError } = useQuery({
     queryFn: () => getFilteredLogs(timeFilter, dateValue),
-    queryKey: ["logsGraphFilter"],
+    queryKey: ["logsGraphFilter", { timeFilter, dateValue }],
   });
-
-  useEffect(() => {
-    queryClient.invalidateQueries({ queryKey: ["logsGraphFilter"] });
-  }, [timeFilter, dateValue]);
 
   if (
     timeFilter == graphTimeFilter.YEAR &&

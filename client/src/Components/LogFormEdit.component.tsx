@@ -3,6 +3,7 @@ import { FaCamera, FaSpinner } from "react-icons/fa";
 import { IoMdClose } from "react-icons/io";
 import { getLog, updateLog } from "../api/logApi";
 import { convertDateDefault, createDate, Log, modifyDate } from "../utils/util";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 const initialState = {
   glucose: 0,
@@ -15,14 +16,31 @@ const initialState = {
 
 interface Props {
   setToggle: (status: boolean) => void;
-  id: number;
+
+  log: Log;
 }
 
-const LogFormEdit = ({ setToggle, id }: Props) => {
+const LogFormEdit = ({ setToggle, log }: Props) => {
   const [dateInput, setDateInput] = useState("");
-  const [formData, setFormData] = useState<Log>();
+  const [formData, setFormData] = useState<Log>(log);
 
   const [submitting, setSubmitting] = useState<boolean>(false);
+  const queryClient = useQueryClient();
+
+  const { mutateAsync } = useMutation({
+    mutationFn: updateLog,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["logsPaged"] });
+    },
+  });
+
+  console.log(log);
+
+  useEffect(() => {
+    if (log.date) {
+      setDateIfExists(log.date);
+    }
+  }, [log]);
 
   const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({
@@ -32,20 +50,11 @@ const LogFormEdit = ({ setToggle, id }: Props) => {
     setDateInput(e.target.value);
   };
 
-  useEffect(() => {
-    getLog(id).then((d) => {
-      setFormData(d);
-      if (d.date) {
-        setDateIfExists(d.date);
-      }
-    });
-  }, [id]);
-
   const setDateIfExists = (date: string) => {
     setDateInput(convertDateDefault(date));
   };
 
-  const handleSubmission = (e: FormEvent) => {
+  const handleSubmission = async (e: FormEvent) => {
     e.preventDefault();
 
     if (formData?.date == "" || formData?.date.length != 14) {
@@ -53,7 +62,7 @@ const LogFormEdit = ({ setToggle, id }: Props) => {
     }
 
     setSubmitting(true);
-    updateLog(formData!)
+    await mutateAsync(formData!)
       .then(() => {
         setToggle(false);
         setFormData({ ...initialState, id: undefined });
