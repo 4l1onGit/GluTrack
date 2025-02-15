@@ -1,9 +1,9 @@
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import React, { FormEvent, useEffect, useState } from "react";
 import { FaCamera, FaSpinner } from "react-icons/fa";
 import { IoMdClose } from "react-icons/io";
-import { getLog, updateLog } from "../api/logApi";
+import { updateLog } from "../api/logApi";
 import { convertDateDefault, createDate, Log, modifyDate } from "../utils/util";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 const initialState = {
   glucose: 0,
