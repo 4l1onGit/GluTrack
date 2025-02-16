@@ -8,9 +8,10 @@ import { manifest } from './manifest';
 export default defineConfig({
   plugins: [react(), VitePWA(
     {
-      registerType: 'autoUpdate',
+      registerType: 'prompt',
       includeAssets: ['favicon.ico', 'apple-touch-icon.png', 'mask-icon.svg'],
-      manifest: manifest 
+      manifest: manifest, 
+      injectRegister: 'auto'
     }
     )],
   test: {
