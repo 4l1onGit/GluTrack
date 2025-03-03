@@ -21,7 +21,7 @@ const LogDropDown = ({ log }: Props) => {
   const { mutateAsync, isSuccess } = useMutation({
     mutationFn: deleteLog,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["logsTotal"] });
+      queryClient.invalidateQueries({ queryKey: ["logsPaged"] });
     },
   });
 

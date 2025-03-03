@@ -10,10 +10,10 @@ export default defineConfig({
     {
       registerType: 'prompt',
       includeAssets: ['favicon.ico', 'apple-touch-icon.png', 'mask-icon.svg'],
-      manifest: manifest, 
+      manifest: manifest,
       injectRegister: 'auto'
     }
-    )],
+  )],
   test: {
     globals: true,
     environment: 'jsdom',

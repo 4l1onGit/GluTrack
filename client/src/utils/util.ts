@@ -11,6 +11,20 @@ export interface Log {
   }
 
 
+  export interface LogResponse {
+    page: number,
+    totalRecords: number,
+    maxPage: number,
+    data: Log[]
+  }
+
+  export interface logFilters {
+    day?: string, // 00 format
+    week?: boolean, // Show week based off day
+    month?: string, // 00 format
+    year?: string, // 0000 format
+  }
+
 
   export function createDate() {
     const date = new Date();

@@ -34,7 +34,22 @@ const LineChartComponent = ({ typeFilter, timeFilter }: Props) => {
   const [max, setMax] = useState<number>();
 
   const { data, isLoading, isError } = useQuery({
-    queryFn: () => getFilteredLogs(timeFilter, dateValue),
+    queryFn: () =>
+      getFilteredLogs({
+        day:
+          timeFilter === graphTimeFilter.DAY ||
+          timeFilter === graphTimeFilter.WEEK
+            ? getDay()
+            : undefined,
+        month:
+          timeFilter === graphTimeFilter.MONTH ||
+          timeFilter === graphTimeFilter.DAY ||
+          timeFilter === graphTimeFilter.WEEK
+            ? getMonth()
+            : undefined,
+        week: timeFilter === graphTimeFilter.WEEK ? true : false,
+        year: date.getFullYear().toString(),
+      }),
     queryKey: ["logsGraphFilter", { timeFilter, dateValue }],
   });
 
@@ -65,9 +80,9 @@ const LineChartComponent = ({ typeFilter, timeFilter }: Props) => {
 
       if (data) {
         const maxY = Math.max(
-          ...data.map((d) => d.carb),
-          ...data.map((d) => d.insulin),
-          ...data.map((d) => d.glucose)
+          ...data.data.map((d) => d.carb),
+          ...data.data.map((d) => d.insulin),
+          ...data.data.map((d) => d.glucose)
         );
         setMax(maxY);
       }
@@ -77,7 +92,7 @@ const LineChartComponent = ({ typeFilter, timeFilter }: Props) => {
         setYAxis("insulin");
       }
       if (data) {
-        setMax(Math.max(...data.map((d) => d.insulin)));
+        setMax(Math.max(...data.data.map((d) => d.insulin)));
       }
     }
 
@@ -87,7 +102,7 @@ const LineChartComponent = ({ typeFilter, timeFilter }: Props) => {
       }
 
       if (data) {
-        setMax(Math.max(...data.map((d) => d.carb)));
+        setMax(Math.max(...data.data.map((d) => d.carb)));
       }
     }
 
@@ -97,12 +112,12 @@ const LineChartComponent = ({ typeFilter, timeFilter }: Props) => {
       }
 
       if (data) {
-        setMax(Math.max(...data.map((d) => d.glucose)));
+        setMax(Math.max(...data.data.map((d) => d.glucose)));
       }
     }
   }, [dateValue, max, yAxis, typeFilter, data]);
 
-  if (data?.length == 0) {
+  if (data?.data.length == 0) {
     return (
       <div className="flex justify-center items-center h-full">
         <h2 className="text-2xl font-semibold uppercase text-blue-950 tracking-wider">
@@ -131,7 +146,7 @@ const LineChartComponent = ({ typeFilter, timeFilter }: Props) => {
   }
   return (
     <ResponsiveContainer width="100%" height="100%">
-      <LineChart data={data} margin={{ right: 50, top: 50 }}>
+      <LineChart data={data?.data} margin={{ right: 50, top: 50 }}>
         <CartesianGrid strokeDasharray="3 3" />
         <XAxis dataKey="date" tick={false} />
         <YAxis dataKey={yAxis} domain={[0, max!]} />

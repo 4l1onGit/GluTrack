@@ -15,6 +15,7 @@ import {
 } from "./utils/util";
 import Login from "./Components/Login.component";
 import FilterRow from "./Components/FiltersRow.component";
+import Setting from "./Components/Setting.component";
 
 const graphToggles: btnToggles[] = [
   {
@@ -74,6 +75,8 @@ function App() {
   const [toggleForm, setToggleForm] = useState<boolean>(false);
   const [toggleLogList, setToggleLogList] = useState<boolean>(false);
 
+  const [toggleSetting, setToggleSetting] = useState<boolean>(false);
+
   if (navigator.onLine && localStorage.length) {
     postCache();
   }
@@ -84,17 +87,17 @@ function App() {
     return <Login />;
   } else {
     return (
-      <div className="relative flex flex-col p-4 h-screen space-y-6 w-full mx-auto lg:items-center">
+      <div className="relative flex flex-col h-screen justify-between px-4 space-y-6 w-full mx-auto lg:items-center">
         <div
           className={
-            toggleForm || toggleLogList
+            toggleForm || toggleLogList || toggleSetting
               ? "absolute inset-0 h-screen w-full bg-black bg-opacity-15 backdrop-blur-sm"
               : "hidden"
           }
         ></div>
         <div
           className={
-            toggleForm || toggleLogList
+            toggleForm || toggleLogList || toggleSetting
               ? "transition-all duration-150 ease-out opacity-0"
               : `bg-gradient-to-b from-customblue-700 to-customblue-500 rounded-xl p-2 w-full h-[16rem] lg:h-[40vh] lg:w-[40vw] drop-shadow-xl hover:bg-customblue-600 transition-all opacity-100 duration-500 ease-linear`
           }
@@ -135,7 +138,10 @@ function App() {
               </span>
             </div>
           </button>
-          <button className="bg-gradient-to-bl from-customblue-700 to-customblue-500 shadow-lg w-full text-[4.5rem] text-opacity-70 flex justify-center items-center rounded-xl hover:bg-customblue-600 transition-colors duration-150 ease-in-out text-blue-950 font-bold">
+          <button
+            onClick={() => setToggleSetting(!toggleSetting)}
+            className="bg-gradient-to-bl from-customblue-700 to-customblue-500 shadow-lg w-full text-[4.5rem] text-opacity-70 flex justify-center items-center rounded-xl hover:bg-customblue-600 transition-colors duration-150 ease-in-out text-blue-950 font-bold"
+          >
             <div className="flex flex-col items-center space-y-4">
               <IoIosSettings />
               <span className="text-sm font-bold tracking-wider">settings</span>
@@ -154,6 +160,12 @@ function App() {
           toggle={toggleLogList}
           setState={() => {
             setToggleLogList(!toggleLogList);
+          }}
+        />
+        <Setting
+          toggle={toggleSetting}
+          setToggle={() => {
+            setToggleSetting(!toggleSetting);
           }}
         />
       </div>

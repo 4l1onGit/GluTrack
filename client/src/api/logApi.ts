@@ -1,5 +1,5 @@
 import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
-import { Log } from "../utils/util";
+import { Log, logFilters, LogResponse } from "../utils/util";
 
 const getAxiosConfig = (): AxiosRequestConfig => {
   const token = sessionStorage.getItem("jwt");
@@ -17,35 +17,28 @@ const getAxiosConfig = (): AxiosRequestConfig => {
 // GET
 
 export const getLogs = async (): Promise<Log[]> => {
-  const response =  await axios.get(`${import.meta.env.VITE_URL}/api/log`, getAxiosConfig());
+  const response =  await axios.get(`${import.meta.env.VITE_URL}/api/v1/logs`, getAxiosConfig());
 
   return response.data;
  
+}
+
+export const getLogsPage = async (page: number): Promise<LogResponse> => {
+  const response = await axios.get(`${import.meta.env.VITE_URL}/api/v1/logs`, { headers: getAxiosConfig().headers, params: {page: page}} );
+ 
+  return response.data;
 }
 
 export const getLog = async (id: number): Promise<Log> => {
-  const response =  await axios.get(`${import.meta.env.VITE_URL}/api/log/${id}`, getAxiosConfig());
+  const response =  await axios.get(`${import.meta.env.VITE_URL}/api/v1/logs/${id}`, getAxiosConfig());
 
   return response.data;
  
 }
 
-export const getLogsPage = async (page: number): Promise<Log[]> => {
-  const response =  await axios.get(`${import.meta.env.VITE_URL}/api/log/page/${page}`, getAxiosConfig());
 
-  return response.data;
- 
-}
-
-export const getTotalLogs = async (): Promise<number> => {
-  const response =  await axios.get(`${import.meta.env.VITE_URL}/api/log/count`, getAxiosConfig());
-  
-  return response.data;
-   
-}
-
-export const getFilteredLogs = async (filter: string, value: string): Promise<Log[]> => {
-  const response =  await axios.get(`${import.meta.env.VITE_URL}/api/log/filter/${filter}/${value}`, getAxiosConfig());
+export const getFilteredLogs = async (value: logFilters): Promise<LogResponse> => {
+  const response =  await axios.get(`${import.meta.env.VITE_URL}/api/v1/logs`, {headers: getAxiosConfig().headers, params: value});
 
   return response.data;
 }
@@ -53,7 +46,7 @@ export const getFilteredLogs = async (filter: string, value: string): Promise<Lo
 // POST
 
 export const addLog = async (log: Log): Promise<AxiosResponse> => {
-  const response = await axios.post(`${import.meta.env.VITE_URL}/api/log`, log, getAxiosConfig());
+  const response = await axios.post(`${import.meta.env.VITE_URL}/api/v1/logs`, log, getAxiosConfig());
 
   return response;
 }
@@ -62,7 +55,7 @@ export const addLog = async (log: Log): Promise<AxiosResponse> => {
 // PATCH
 
 export const updateLog = async(log: Log): Promise<Log> => {
-  const response = await axios.patch(`${import.meta.env.VITE_URL}/api/log/${log.id}`, log, getAxiosConfig());
+  const response = await axios.patch(`${import.meta.env.VITE_URL}/api/v1/logs/${log.id}`, log, getAxiosConfig());
 
   return response.data;
 }
@@ -70,7 +63,7 @@ export const updateLog = async(log: Log): Promise<Log> => {
 // DELETE
 
 export const deleteLog = async(logId : number) => {
-  const response = await axios.delete(`${import.meta.env.VITE_URL}/api/log/${logId}`, getAxiosConfig());
+  const response = await axios.delete(`${import.meta.env.VITE_URL}/api/v1/logs/${logId}`, getAxiosConfig());
 
   return response.data;
 }

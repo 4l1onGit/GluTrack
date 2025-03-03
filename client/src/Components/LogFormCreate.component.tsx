@@ -35,7 +35,7 @@ const LogFormCreate = ({ setToggle }: Props) => {
     mutationFn: addLog,
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: ["logsTotal"],
+        queryKey: ["logsPaged"],
       });
       queryClient.invalidateQueries({
         queryKey: ["logsGraphFilter"],
