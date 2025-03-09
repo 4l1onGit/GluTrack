@@ -1,9 +1,10 @@
 import { ReactNode, useState } from "react";
 import { UserContext } from "../contexts/user.context";
+import { UnitType } from "../utils/util";
 
 interface User {
   token: string;
-  unit: string;
+  unit: UnitType;
   email: string;
 }
 
