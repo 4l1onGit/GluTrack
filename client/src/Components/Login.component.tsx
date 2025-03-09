@@ -1,9 +1,10 @@
 import { useMutation } from "@tanstack/react-query";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { loginUser, registerUser } from "../api/userApi";
 import App from "../App";
 import { MdAlternateEmail } from "react-icons/md";
 import { FaKey } from "react-icons/fa";
+import { UserContext } from "../contexts/user.context";
 
 type User = {
   username: string;
@@ -15,6 +16,8 @@ const Login = () => {
     username: "",
     password: "",
   });
+
+  const { setAuthUser } = useContext(UserContext);
 
   const [registerToggle, setRegisterToggle] = useState<boolean>(false);
 
@@ -31,9 +34,13 @@ const Login = () => {
 
   const handleLogin = async () => {
     try {
-      const token = (await authMutation(user)).token;
+      const data = await authMutation(user);
+      const token = data.token;
+      const unit = data.unit;
+      const email = data.email;
       if (token != null) {
         sessionStorage.setItem("jwt", token);
+        setAuthUser({ token: token, unit: unit, email: email });
         setAuth(true);
         setUser({
           username: "",

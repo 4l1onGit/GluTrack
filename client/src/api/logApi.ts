@@ -1,16 +1,8 @@
-import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
+import axios, { AxiosResponse } from "axios";
 import { Log, logFilters, LogResponse } from "../utils/util";
+import { getAxiosConfig } from "./axiosConfig";
 
-const getAxiosConfig = (): AxiosRequestConfig => {
-  const token = sessionStorage.getItem("jwt");
-  return {
-    headers: {
-      Authorization: token,
-      "Content-Type": "application/json",
-      "Access-Control-Allow-Origin" : "*"
-    },
-  };
-};
+
 
 //// LOG CRUD ////
 

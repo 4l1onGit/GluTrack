@@ -113,3 +113,20 @@ export type User = {
   username: string;
   password: string;
 };
+
+export enum glucoseUnit {
+  mmol = 1,
+  mg = 2,
+}
+
+export type UnitType = {
+  id: number,
+  unitType: string
+}
+
+export type UserResponseType = {
+  email: string,
+  token: string,
+  unit: UnitType
+
+}

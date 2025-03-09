@@ -1,8 +1,10 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import React, { FormEvent, useState } from "react";
+import React, { FormEvent, useContext, useState } from "react";
 import { FaCamera, FaSpinner } from "react-icons/fa";
 import { addLog } from "../api/logApi";
-import { createDate, Log, modifyDate } from "../utils/util";
+import { createDate, glucoseUnit, Log, modifyDate } from "../utils/util";
+import { UserContext } from "../contexts/user.context";
+import { mgToMmol } from "../utils/bgConversion";
 
 const initialState = {
   glucose: 0,
@@ -19,6 +21,7 @@ interface Props {
 
 const LogFormCreate = ({ setToggle }: Props) => {
   const queryClient = useQueryClient();
+  const { authUser } = useContext(UserContext);
   const [dateInput, setDateInput] = useState("");
   const [formData, setFormData] = useState<Log>({
     id: undefined,
@@ -60,6 +63,9 @@ const LogFormCreate = ({ setToggle }: Props) => {
 
     if (navigator.onLine) {
       try {
+        if (authUser?.unit.id == glucoseUnit.mg) {
+          setFormData({ ...formData, glucose: mgToMmol(formData.glucose) });
+        }
         const res = await mutateAsync(formData);
         if (res.status == 200) {
           setToggle(false);

@@ -1,9 +1,17 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import React, { FormEvent, useEffect, useState } from "react";
+import React, { FormEvent, useContext, useEffect, useState } from "react";
 import { FaCamera, FaSpinner } from "react-icons/fa";
 import { IoMdClose } from "react-icons/io";
 import { updateLog } from "../api/logApi";
-import { convertDateDefault, createDate, Log, modifyDate } from "../utils/util";
+import {
+  convertDateDefault,
+  createDate,
+  glucoseUnit,
+  Log,
+  modifyDate,
+} from "../utils/util";
+import { UserContext } from "../contexts/user.context";
+import { mgToMmol, mmolToMg } from "../utils/bgConversion";
 
 const initialState = {
   glucose: 0,
@@ -23,7 +31,7 @@ interface Props {
 const LogFormEdit = ({ setToggle, log }: Props) => {
   const [dateInput, setDateInput] = useState("");
   const [formData, setFormData] = useState<Log>(log);
-
+  const { authUser } = useContext(UserContext);
   const [submitting, setSubmitting] = useState<boolean>(false);
   const queryClient = useQueryClient();
 
@@ -37,6 +45,9 @@ const LogFormEdit = ({ setToggle, log }: Props) => {
   useEffect(() => {
     if (log.date) {
       setDateIfExists(log.date);
+    }
+    if (authUser?.unit.id == glucoseUnit.mg) {
+      setFormData({ ...formData, glucose: mmolToMg(formData.glucose) });
     }
   }, [log]);
 
@@ -54,6 +65,14 @@ const LogFormEdit = ({ setToggle, log }: Props) => {
 
   const handleSubmission = async (e: FormEvent) => {
     e.preventDefault();
+
+    if (authUser?.unit.id == glucoseUnit.mg) {
+      console.log(formData.glucose);
+      setFormData({
+        ...formData!,
+        glucose: Math.round(mgToMmol(formData.glucose)),
+      });
+    }
 
     if (formData?.date == "" || formData?.date.length != 14) {
       setFormData({ ...formData!, date: createDate() });
@@ -91,7 +110,7 @@ const LogFormEdit = ({ setToggle, log }: Props) => {
             className="h-10 rounded-2xl px-4"
             type="number"
             name="inputGlucose"
-            value={formData?.glucose}
+            value={formData.glucose}
             onChange={(e) =>
               setFormData({
                 ...formData!,
