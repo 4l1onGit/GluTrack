@@ -44,7 +44,7 @@ const Setting = ({ toggle, setToggle }: Props) => {
           Units
         </h3>
         <div className="flex justify-evenly items-center h-full bg-gradient-to-b from-customblue-700 to-customblue-900 rounded-2xl p-10 w-full">
-          <div className="flex flex-col justify-center h-8 w-full space-y-2">
+          <div className="flex flex-col justify-center h-full w-full space-y-2">
             <label htmlFor="">Glucose:</label>
             <select
               className="rounded-xl w-[50%] text-center h-full items-center"
@@ -55,9 +55,9 @@ const Setting = ({ toggle, setToggle }: Props) => {
               <option value={glucoseUnit.mg}>mg/dl</option>
             </select>
           </div>
-          <div className="flex flex-col justify-center h-8 w-full space-y-2">
+          <div className="flex flex-col justify-center h-8 w-full space-y-2 items-center">
             <button
-              className="bg-blue-950 rounded-3xl p-2"
+              className="bg-blue-950 rounded-3xl p-2 text-white font-semibold"
               onClick={handleUnitChange}
             >
               Confirm

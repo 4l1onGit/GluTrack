@@ -121,7 +121,7 @@ export enum glucoseUnit {
 
 export type UnitType = {
   id: number,
-  unitType: string
+  unit_type: string
 }
 
 export type UserResponseType = {

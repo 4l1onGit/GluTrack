@@ -2,9 +2,9 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import React, { FormEvent, useContext, useState } from "react";
 import { FaCamera, FaSpinner } from "react-icons/fa";
 import { addLog } from "../api/logApi";
-import { createDate, glucoseUnit, Log, modifyDate } from "../utils/util";
 import { UserContext } from "../contexts/user.context";
 import { mgToMmol } from "../utils/bgConversion";
+import { createDate, glucoseUnit, Log, modifyDate } from "../utils/util";
 
 const initialState = {
   glucose: 0,
@@ -32,6 +32,7 @@ const LogFormCreate = ({ setToggle }: Props) => {
     note: "",
     photo: "",
   });
+  const [glucose, setGlucose] = useState(0);
   const [submitting, setSubmitting] = useState<boolean>(false);
 
   const { mutateAsync } = useMutation({
@@ -54,6 +55,17 @@ const LogFormCreate = ({ setToggle }: Props) => {
     setDateInput(e.target.value);
   };
 
+  const handleGlucoseChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setGlucose(e.target.valueAsNumber);
+    setFormData({
+      ...formData!,
+      glucose:
+        authUser?.unit.id == glucoseUnit.mg
+          ? mgToMmol(e.target.valueAsNumber)
+          : e.target.valueAsNumber,
+    });
+  };
+
   const handleSubmission = async (e: FormEvent) => {
     e.preventDefault();
 
@@ -63,14 +75,12 @@ const LogFormCreate = ({ setToggle }: Props) => {
 
     if (navigator.onLine) {
       try {
-        if (authUser?.unit.id == glucoseUnit.mg) {
-          setFormData({ ...formData, glucose: mgToMmol(formData.glucose) });
-        }
         const res = await mutateAsync(formData);
         if (res.status == 200) {
           setToggle(false);
         }
         setFormData({ ...initialState, id: undefined });
+        setGlucose(0);
       } catch (e) {
         console.log(e);
       }
@@ -96,23 +106,25 @@ const LogFormCreate = ({ setToggle }: Props) => {
   return (
     <form className="space-y-2" action="post">
       <div className="flex space-x-4  pb-4">
-        <div className="flex flex-col space-y-2 w-28">
-          <label className="uppercase text-xs font-bold" htmlFor="inputGlucose">
+        <div className="flex flex-col justify-end items-end space-y-2 w-28">
+          <label
+            className="self-start uppercase text-xs font-bold"
+            htmlFor="inputGlucose"
+          >
             Glucose
           </label>
+
           <input
-            className="h-10 rounded-2xl px-4"
+            className="h-10 absolute rounded-2xl px-4 w-28"
             type="number"
             name="inputGlucose"
-            value={formData?.glucose}
-            onChange={(e) =>
-              setFormData({
-                ...formData!,
-                glucose: e.target.valueAsNumber,
-              })
-            }
+            value={glucose}
+            onChange={(e) => handleGlucoseChange(e)}
             id="inputGlucose"
           />
+          <span className="relative h-10 w-14 rounded-r-2xl bg-blue-950 text-white py-2 text-center">
+            {authUser?.unit.id == 1 ? "mmol" : "mg"}
+          </span>
         </div>
         <div className="flex flex-col space-y-2">
           <label className="uppercase text-xs font-bold" htmlFor="inputTime">

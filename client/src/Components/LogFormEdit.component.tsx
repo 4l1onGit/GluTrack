@@ -32,6 +32,9 @@ const LogFormEdit = ({ setToggle, log }: Props) => {
   const [dateInput, setDateInput] = useState("");
   const [formData, setFormData] = useState<Log>(log);
   const { authUser } = useContext(UserContext);
+  const [glucose, setGlucose] = useState(
+    authUser?.unit.id == glucoseUnit.mg ? mmolToMg(log.glucose) : log.glucose
+  );
   const [submitting, setSubmitting] = useState<boolean>(false);
   const queryClient = useQueryClient();
 
@@ -46,9 +49,6 @@ const LogFormEdit = ({ setToggle, log }: Props) => {
     if (log.date) {
       setDateIfExists(log.date);
     }
-    if (authUser?.unit.id == glucoseUnit.mg) {
-      setFormData({ ...formData, glucose: mmolToMg(formData.glucose) });
-    }
   }, [log]);
 
   const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -59,20 +59,23 @@ const LogFormEdit = ({ setToggle, log }: Props) => {
     setDateInput(e.target.value);
   };
 
+  const handleGlucoseChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setGlucose(e.target.valueAsNumber);
+    setFormData({
+      ...formData!,
+      glucose:
+        authUser?.unit.id == glucoseUnit.mg
+          ? mgToMmol(e.target.valueAsNumber)
+          : e.target.valueAsNumber,
+    });
+  };
+
   const setDateIfExists = (date: string) => {
     setDateInput(convertDateDefault(date));
   };
 
   const handleSubmission = async (e: FormEvent) => {
     e.preventDefault();
-
-    if (authUser?.unit.id == glucoseUnit.mg) {
-      console.log(formData.glucose);
-      setFormData({
-        ...formData!,
-        glucose: Math.round(mgToMmol(formData.glucose)),
-      });
-    }
 
     if (formData?.date == "" || formData?.date.length != 14) {
       setFormData({ ...formData!, date: createDate() });
@@ -83,6 +86,7 @@ const LogFormEdit = ({ setToggle, log }: Props) => {
       .then(() => {
         setToggle(false);
         setFormData({ ...initialState, id: undefined });
+        setGlucose(0);
         setSubmitting(false);
       })
       .catch((e) => {
@@ -110,13 +114,8 @@ const LogFormEdit = ({ setToggle, log }: Props) => {
             className="h-10 rounded-2xl px-4"
             type="number"
             name="inputGlucose"
-            value={formData.glucose}
-            onChange={(e) =>
-              setFormData({
-                ...formData!,
-                glucose: e.target.valueAsNumber,
-              })
-            }
+            value={glucose}
+            onChange={(e) => handleGlucoseChange(e)}
             id="inputGlucose"
           />
         </div>
