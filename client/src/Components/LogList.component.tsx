@@ -1,14 +1,12 @@
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { useContext, useEffect, useState } from "react";
-import { IoMdArrowDropdown } from "react-icons/io";
-import { getLogsPage } from "../api/logApi";
-import { glucoseUnit, Log } from "../utils/util";
+import { useEffect, useState } from "react";
+import { getFilteredLogsPaged, getLogsPage } from "../api/logApi";
 import ListFilters from "./ListFilters.component";
-import LogDropDown from "./LogDropDown.component";
+import LogListCard from "./LogListCard";
 import Pagination from "./Pagination.component";
+import LogListCardSkeleton from "./Skeleton/LogListCardSkeleton";
 import Slide from "./Slide.component";
-import { UserContext } from "../contexts/user.context";
-import { mmolToMg } from "../utils/bgConversion";
+import { logFilters } from "../utils/util";
 
 interface Props {
   toggle: boolean;
@@ -17,33 +15,31 @@ interface Props {
 
 const LogList = ({ toggle, setState }: Props) => {
   const queryClient = useQueryClient();
-  const { authUser } = useContext(UserContext);
+
   const [page, setPage] = useState(1);
-  const [selectedLog, setSelectedLog] = useState<Log>();
-  const [togglePopup, setTogglePopup] = useState(false);
+
   const [maxPage, setMaxPage] = useState<number>(1);
+  const [filters, setFilters] = useState<logFilters>({});
+
+  console.log(filters);
 
   const {
     data: logsData,
     isLoading: logsDataLoading,
     isError: logsDataError,
   } = useQuery({
-    queryFn: () => getLogsPage(page),
+    queryFn: () =>
+      filters ? getFilteredLogsPaged(filters, page) : getLogsPage(page),
     queryKey: ["logsPaged", { page }],
   });
 
   useEffect(() => {
     queryClient.invalidateQueries({ queryKey: ["logsPaged"] });
-  }, [page, queryClient]);
+  }, [page, queryClient, filters]);
 
   useEffect(() => {
     setMaxPage(logsData?.maxPage ? logsData.maxPage : 1);
   }, [logsData]);
-
-  const handleSelectedLog = (log: Log) => {
-    setSelectedLog(log);
-    setTogglePopup(!togglePopup);
-  };
 
   const pagination = new Array(logsData ? logsData.maxPage : 1);
 
@@ -66,65 +62,23 @@ const LogList = ({ toggle, setState }: Props) => {
               setPage={setPage}
               pages={pagination}
             />
-            <ListFilters />
+            <ListFilters setFilters={setFilters} filters={filters} />
           </div>
         ) : (
-          ""
+          <div className="skeleton w-full h-full space-y-4"></div>
         )}
       </div>
       <div className="flex flex-col justify-center w-full h-full items-center">
         <ul className="w-full space-y-2 h-full">
           {logsData && logsData!.data.length > 0 ? (
-            logsData.data?.map((log) => (
-              <li
-                className="border-2 rounded-2xl border-customblue-600 bg-gradient-to-l from-customblue-800 to-customblue-900 w-full h-22"
-                key={`${log.id}`}
-              >
-                <div className="flex p-2 space-x-2 justify-between">
-                  <ul className="flex flex-col text-white font-semibold">
-                    <li className="text-sm">{log.date}</li>
-                    <li>
-                      Glucose:{" "}
-                      {authUser?.unit.id == glucoseUnit.mg
-                        ? mmolToMg(log.glucose)
-                        : log.glucose}{" "}
-                      <span className="text-xs">
-                        {authUser?.unit.id == glucoseUnit.mg
-                          ? "mg/dl"
-                          : "mmol/L"}
-                      </span>
-                    </li>
-                    <li>
-                      Insulin: {log.insulin}{" "}
-                      <span className="text-xs">Units</span>
-                    </li>
-                    <li>
-                      Carbs: {log.carb}
-                      <span className="text-xs">G</span>
-                    </li>
-                    {selectedLog == log && togglePopup ? (
-                      <LogDropDown key={selectedLog?.id} log={selectedLog!} />
-                    ) : (
-                      ""
-                    )}
-                  </ul>
-                  <button
-                    className={` transition-all duration-300 ${
-                      selectedLog == log && togglePopup
-                        ? " text-blue-950"
-                        : "rotate-90 text-white"
-                    }`}
-                    onClick={() => handleSelectedLog(log)}
-                  >
-                    <IoMdArrowDropdown size={50} />
-                  </button>
-                </div>
-              </li>
-            ))
+            logsData.data?.map((log) => <LogListCard key={log.id} log={log} />)
           ) : (
-            <li className="text-center uppercase text-md font-semibold">
-              No Logs
-            </li>
+            <>
+              <LogListCardSkeleton />
+              <LogListCardSkeleton />
+              <LogListCardSkeleton />
+              <LogListCardSkeleton />
+            </>
           )}
         </ul>
       </div>

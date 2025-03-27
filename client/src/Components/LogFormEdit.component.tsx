@@ -1,8 +1,10 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import React, { FormEvent, useContext, useEffect, useState } from "react";
-import { FaCamera, FaSpinner } from "react-icons/fa";
+import { FaCamera } from "react-icons/fa";
 import { IoMdClose } from "react-icons/io";
 import { updateLog } from "../api/logApi";
+import { UserContext } from "../contexts/user.context";
+import { mgToMmol, mmolToMg } from "../utils/bgConversion";
 import {
   convertDateDefault,
   createDate,
@@ -10,8 +12,7 @@ import {
   Log,
   modifyDate,
 } from "../utils/util";
-import { UserContext } from "../contexts/user.context";
-import { mgToMmol, mmolToMg } from "../utils/bgConversion";
+import { MessagesContext } from "../contexts/message.context";
 
 const initialState = {
   glucose: 0,
@@ -31,7 +32,10 @@ interface Props {
 const LogFormEdit = ({ setToggle, log }: Props) => {
   const [dateInput, setDateInput] = useState("");
   const [formData, setFormData] = useState<Log>(log);
+
   const { authUser } = useContext(UserContext);
+  const { setMessages } = useContext(MessagesContext);
+
   const [glucose, setGlucose] = useState(
     authUser?.unit.id == glucoseUnit.mg ? mmolToMg(log.glucose) : log.glucose
   );
@@ -88,6 +92,9 @@ const LogFormEdit = ({ setToggle, log }: Props) => {
         setFormData({ ...initialState, id: undefined });
         setGlucose(0);
         setSubmitting(false);
+        setMessages([{ message: "Successfully Edited Log!" }]);
+        const modal = document.getElementById("msg_modal") as HTMLDialogElement;
+        modal.showModal();
       })
       .catch((e) => {
         console.log(e);
@@ -97,7 +104,7 @@ const LogFormEdit = ({ setToggle, log }: Props) => {
 
   return (
     <form
-      className="space-y-2 text-black bg-customblue-600 shadow-md transition-all p-6 rounded-2xl"
+      className="space-y-2 bg-base-200 shadow-md transition-all p-6 rounded-2xl h-[55vh]"
       action="patch"
     >
       <div className="flex flex-col w-full items-end">
@@ -111,7 +118,7 @@ const LogFormEdit = ({ setToggle, log }: Props) => {
             Glucose
           </label>
           <input
-            className="h-10 rounded-2xl px-4"
+            className="h-10 rounded-2xl px-4 bg-base-100"
             type="number"
             name="inputGlucose"
             value={glucose}
@@ -125,7 +132,7 @@ const LogFormEdit = ({ setToggle, log }: Props) => {
             Time <span className="font-thin text-xs">(optional)</span>
           </label>
           <input
-            className="h-10 rounded-2xl w-full text-center px-4"
+            className="h-10 rounded-2xl w-full text-center px-4 bg-base-100"
             type="datetime-local"
             name="inputTime"
             id="inputTime"
@@ -140,7 +147,7 @@ const LogFormEdit = ({ setToggle, log }: Props) => {
             Carbohydrates
           </label>
           <input
-            className="h-10 rounded-2xl px-4 w-28"
+            className="h-10 rounded-2xl px-4 w-28 bg-base-100"
             type="number"
             name="inputCarbs"
             id="inputCarbs"
@@ -158,7 +165,7 @@ const LogFormEdit = ({ setToggle, log }: Props) => {
             Insulin
           </label>
           <input
-            className="h-10 rounded-2xl w-28 px-4"
+            className="h-10 rounded-2xl w-28 px-4 bg-base-100"
             type="number"
             name="inputInsulin"
             id="inputInsulin"
@@ -179,7 +186,7 @@ const LogFormEdit = ({ setToggle, log }: Props) => {
           <button
             id="photoBtn"
             onSubmit={() => {}}
-            className="bg-white rounded-2xl w-full h-10"
+            className="bg-primary rounded-2xl w-full h-10"
           >
             <FaCamera className="mx-auto" />
           </button>
@@ -192,7 +199,7 @@ const LogFormEdit = ({ setToggle, log }: Props) => {
         <textarea
           name="inputNotes"
           id="inputNotes"
-          className="w-full h-[80%] rounded-xl p-2"
+          className="w-full h-[20vh] rounded-xl p-2 bg-base-100"
           value={formData?.note}
           onChange={(e) =>
             setFormData({
@@ -201,17 +208,21 @@ const LogFormEdit = ({ setToggle, log }: Props) => {
             })
           }
         />
-      </div>
-      <div className="flex justify-end">
-        <button
-          disabled={submitting}
-          className={`flex items-center rounded-2xl h-10 w-20 px-4 font-bold justify-center ${
-            submitting ? "bg-[#fa9836]" : "bg-[#FFDFBF]"
-          }`}
-          onClick={(e) => handleSubmission(e)}
-        >
-          {submitting ? <FaSpinner /> : "Edit"}
-        </button>
+        <div className="w-full flex justify-end">
+          <button
+            disabled={submitting}
+            className={`flex items-center rounded-2xl h-10 w-20 px-4 font-bold justify-center ${
+              submitting ? "bg-[#fa9836]" : "bg-primary"
+            }`}
+            onClick={(e) => handleSubmission(e)}
+          >
+            {submitting ? (
+              <span className="loading loading-dots loading-sm"></span>
+            ) : (
+              "Edit"
+            )}
+          </button>
+        </div>
       </div>
     </form>
   );

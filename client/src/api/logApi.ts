@@ -21,6 +21,7 @@ export const getLogsPage = async (page: number): Promise<LogResponse> => {
   return response.data;
 }
 
+
 export const getLog = async (id: number): Promise<Log> => {
   const response =  await axios.get(`${import.meta.env.VITE_URL}/api/v1/logs/${id}`, getAxiosConfig());
 
@@ -34,6 +35,16 @@ export const getFilteredLogs = async (value: logFilters): Promise<LogResponse> =
 
   return response.data;
 }
+
+export const getFilteredLogsPaged = async (filters: logFilters, page: number): Promise<LogResponse> => {
+  const response =  await axios.get(`${import.meta.env.VITE_URL}/api/v1/logs`, {headers: getAxiosConfig().headers, params: {
+    page: page,
+    records_per_page: 4,
+    ...filters 
+  } });
+
+  return response.data;
+} 
 
 // POST
 

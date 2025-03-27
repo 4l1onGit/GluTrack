@@ -1,10 +1,12 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import React, { FormEvent, useContext, useState } from "react";
-import { FaCamera, FaSpinner } from "react-icons/fa";
+import { FaCamera } from "react-icons/fa";
 import { addLog } from "../api/logApi";
 import { UserContext } from "../contexts/user.context";
 import { mgToMmol } from "../utils/bgConversion";
 import { createDate, glucoseUnit, Log, modifyDate } from "../utils/util";
+import Slide from "./Slide.component";
+import { MessagesContext } from "../contexts/message.context";
 
 const initialState = {
   glucose: 0,
@@ -16,10 +18,11 @@ const initialState = {
 };
 
 interface Props {
-  setToggle: (status: boolean) => void;
+  toggle: boolean;
+  setState: (status: boolean) => void;
 }
 
-const LogFormCreate = ({ setToggle }: Props) => {
+const LogFormCreate = ({ toggle, setState }: Props) => {
   const queryClient = useQueryClient();
   const { authUser } = useContext(UserContext);
   const [dateInput, setDateInput] = useState("");
@@ -34,6 +37,7 @@ const LogFormCreate = ({ setToggle }: Props) => {
   });
   const [glucose, setGlucose] = useState(0);
   const [submitting, setSubmitting] = useState<boolean>(false);
+  const { setMessages } = useContext(MessagesContext);
 
   const { mutateAsync } = useMutation({
     mutationFn: addLog,
@@ -77,7 +81,12 @@ const LogFormCreate = ({ setToggle }: Props) => {
       try {
         const res = await mutateAsync(formData);
         if (res.status == 200) {
-          setToggle(false);
+          setState(false);
+          setMessages([{ message: "Successfully created log!" }]);
+          const modal = document.getElementById(
+            "msg_modal"
+          ) as HTMLDialogElement;
+          modal.showModal();
         }
         setFormData({ ...initialState, id: undefined });
         setGlucose(0);
@@ -94,132 +103,139 @@ const LogFormCreate = ({ setToggle }: Props) => {
           localStorage.setItem("createLog", JSON.stringify(formData));
         }
         setSubmitting(false);
-        setToggle(false);
+        setState(false);
       } catch (err) {
         console.log(err);
         setSubmitting(false);
-        setToggle(false);
+        setState(false);
       }
     }
   };
 
   return (
-    <form className="space-y-2" action="post">
-      <div className="flex space-x-4  pb-4">
-        <div className="flex flex-col justify-end items-end space-y-2 w-28">
-          <label
-            className="self-start uppercase text-xs font-bold"
-            htmlFor="inputGlucose"
-          >
-            Glucose
-          </label>
+    <Slide toggle={toggle} setToggle={setState}>
+      <form className="w-full space-y-4" action="post">
+        <div className="flex space-x-4 pb-4">
+          <div className="flex flex-col justify-end items-end w-28">
+            <label
+              className="self-start uppercase text-xs font-bold pb-2"
+              htmlFor="inputGlucose"
+            >
+              Glucose
+            </label>
 
-          <input
-            className="h-10 absolute rounded-2xl px-4 w-28"
-            type="number"
-            name="inputGlucose"
-            value={glucose}
-            onChange={(e) => handleGlucoseChange(e)}
-            id="inputGlucose"
-          />
-          <span className="relative h-10 w-14 rounded-r-2xl bg-blue-950 text-white py-2 text-center">
-            {authUser?.unit.id == 1 ? "mmol" : "mg"}
-          </span>
+            <input
+              className="h-10 absolute rounded-2xl px-4 w-28 input input-primary bg-base-100"
+              type="number"
+              name="inputGlucose"
+              value={glucose}
+              onChange={(e) => handleGlucoseChange(e)}
+              id="inputGlucose"
+            />
+            <span className="relative h-10 w-14 rounded-r-2xl bg-primary py-2 text-center font-semibold">
+              {authUser?.unit.id == 1 ? "mmol" : "mg"}
+            </span>
+          </div>
+          <div className="flex flex-col space-y-2">
+            <label className="uppercase text-xs font-bold" htmlFor="inputTime">
+              Time <span className="font-thin text-xs">(optional)</span>
+            </label>
+            <input
+              className="h-10 rounded-2xl w-full text-center px-4 input input-primary bg-base-100"
+              type="datetime-local"
+              name="inputTime"
+              id="inputTime"
+              value={dateInput}
+              onChange={(e) => handleDateChange(e)}
+            />
+          </div>
         </div>
-        <div className="flex flex-col space-y-2">
-          <label className="uppercase text-xs font-bold" htmlFor="inputTime">
-            Time <span className="font-thin text-xs">(optional)</span>
-          </label>
-          <input
-            className="h-10 rounded-2xl w-full text-center px-4"
-            type="datetime-local"
-            name="inputTime"
-            id="inputTime"
-            value={dateInput}
-            onChange={(e) => handleDateChange(e)}
-          />
+        <div className="flex space-x-4">
+          <div className="flex flex-col space-y-2">
+            <label className="uppercase text-xs font-bold" htmlFor="inputCarbs">
+              Carbohydrates
+            </label>
+            <input
+              className="h-10 rounded-2xl px-4 w-28 bg-base-100 input input-primary"
+              type="number"
+              name="inputCarbs"
+              id="inputCarbs"
+              value={formData?.carb}
+              onChange={(e) =>
+                setFormData({
+                  ...formData!,
+                  carb: e.target.valueAsNumber,
+                })
+              }
+            />
+          </div>
+          <div className="flex flex-col space-y-2 relative">
+            <label
+              className="uppercase text-xs font-bold"
+              htmlFor="inputInsulin"
+            >
+              Insulin
+            </label>
+            <input
+              className="h-10 rounded-2xl px-4 w-28 bg-base-100 input input-primary"
+              type="number"
+              name="inputInsulin"
+              id="inputInsulin"
+              value={formData?.insulin}
+              onChange={(e) =>
+                setFormData({
+                  ...formData!,
+                  insulin: e.target.valueAsNumber,
+                })
+              }
+            />
+          </div>
+
+          <div className="flex flex-col space-y-2 relative justify-center w-full">
+            <label className="uppercase text-xs font-bold" htmlFor="photoBtn">
+              Photo
+            </label>
+            <button
+              id="photoBtn"
+              onSubmit={() => {}}
+              className="btn btn-primary rounded-2xl w-full h-10"
+            >
+              <FaCamera className="mx-auto scale-150" />
+            </button>
+          </div>
         </div>
-      </div>
-      <div className="flex space-x-4">
-        <div className="flex flex-col space-y-2">
-          <label className="uppercase text-xs font-bold" htmlFor="inputCarbs">
-            Carbohydrates
+        <div className="flex flex-col py-2 h-full space-y-2">
+          <label className="uppercase text-xs font-bold" htmlFor="inputNotes">
+            Notes <span className="font-thin text-xs">(optional)</span>
           </label>
-          <input
-            className="h-10 rounded-2xl px-4 w-28"
-            type="number"
-            name="inputCarbs"
-            id="inputCarbs"
-            value={formData?.carb}
+          <textarea
+            name="inputNotes"
+            id="inputNotes"
+            className="w-full h-[80%] rounded-xl p-2 bg-base-100"
+            value={formData?.note}
             onChange={(e) =>
               setFormData({
                 ...formData!,
-                carb: e.target.valueAsNumber,
+                note: e.target.value,
               })
             }
           />
         </div>
-        <div className="flex flex-col space-y-2 relative">
-          <label className="uppercase text-xs font-bold" htmlFor="inputInsulin">
-            Insulin
-          </label>
-          <input
-            className="h-10 rounded-2xl w-28 px-4"
-            type="number"
-            name="inputInsulin"
-            id="inputInsulin"
-            value={formData?.insulin}
-            onChange={(e) =>
-              setFormData({
-                ...formData!,
-                insulin: e.target.valueAsNumber,
-              })
-            }
-          />
-        </div>
-
-        <div className="flex flex-col space-y-2 relative justify-center w-full">
-          <label className="uppercase text-xs font-bold" htmlFor="photoBtn">
-            Photo
-          </label>
+        <div className="flex justify-end">
           <button
-            id="photoBtn"
-            onSubmit={() => {}}
-            className="bg-white rounded-2xl w-full h-10"
+            disabled={submitting}
+            className={`flex items-center rounded-2xl h-10 w-20 px-4 font-bold justify-center bg-primary`}
+            onClick={(e) => handleSubmission(e)}
           >
-            <FaCamera className="mx-auto" />
+            {submitting ? (
+              <span className="loading loading-dots loading-sm"></span>
+            ) : (
+              "Log"
+            )}
           </button>
         </div>
-      </div>
-      <div className="flex flex-col py-2 h-full space-y-2">
-        <label className="uppercase text-xs font-bold" htmlFor="inputNotes">
-          Notes <span className="font-thin text-xs">(optional)</span>
-        </label>
-        <textarea
-          name="inputNotes"
-          id="inputNotes"
-          className="w-full h-[80%] rounded-xl p-2"
-          value={formData?.note}
-          onChange={(e) =>
-            setFormData({
-              ...formData!,
-              note: e.target.value,
-            })
-          }
-        />
-      </div>
-      <div className="flex justify-end">
-        <button
-          disabled={submitting}
-          className={`flex items-center rounded-2xl h-10 w-20 px-4 font-bold justify-center ${
-            submitting ? "bg-[#fa9836]" : "bg-[#FFDFBF]"
-          }`}
-          onClick={(e) => handleSubmission(e)}
-        >
-          {submitting ? <FaSpinner /> : "Log"}
-        </button>
-      </div>
-    </form>
+      </form>
+    </Slide>
   );
 };
 

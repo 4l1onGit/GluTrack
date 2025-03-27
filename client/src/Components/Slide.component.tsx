@@ -12,7 +12,7 @@ const Slide = ({ toggle, children, setToggle }: SlideProps) => {
     <div
       className={
         toggle
-          ? "bg-customblue-500 flex flex-col overflow-hidden  items-start absolute inset-x-0 bottom-0 w-full lg:w-[40vw] lg:mx-auto h-[70%] overflow-y-scroll max-h-[70%] border-b-customblue-500 rounded-t-2xl border-t-2 transition-all duration-300 border-blue-200"
+          ? "bg-base-200 flex flex-col overflow-hidden  items-start absolute inset-x-0 bottom-0 w-full lg:w-[40vw] lg:mx-auto h-[70%] overflow-y-scroll max-h-[70%]  rounded-t-3xl transition-all duration-300"
           : "max-h-0"
       }
     >

@@ -120,7 +120,7 @@ const LineChartComponent = ({ typeFilter, timeFilter }: Props) => {
   if (data?.data.length == 0) {
     return (
       <div className="flex justify-center items-center h-full">
-        <h2 className="text-2xl font-semibold uppercase text-blue-950 tracking-wider">
+        <h2 className="text-2xl font-semibold uppercase tracking-wider">
           No Logs
         </h2>
       </div>
@@ -129,7 +129,7 @@ const LineChartComponent = ({ typeFilter, timeFilter }: Props) => {
   if (isError) {
     return (
       <div className="flex justify-center items-center h-full">
-        <h2 className="text-2xl font-semibold uppercase text-blue-950 tracking-wider">
+        <h2 className="text-2xl font-semibold uppercase tracking-wider">
           Error
         </h2>
       </div>
@@ -138,9 +138,7 @@ const LineChartComponent = ({ typeFilter, timeFilter }: Props) => {
   if (isLoading) {
     return (
       <div className="flex justify-center items-center h-full">
-        <h2 className="text-2xl font-semibold uppercase text-blue-950 tracking-wider">
-          Loading...
-        </h2>
+        <span className="loading loading-spinner loading-xl"></span>
       </div>
     );
   }

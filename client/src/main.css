@@ -1,3 +1,103 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
+@plugin "daisyui";
+
+@theme {
+  --color-customblue-100: #f2f9fc;
+  --color-customblue-200: #ebf7ff;
+  --color-customblue-300: #e3f4ff;
+  --color-customblue-400: #dcf0fc;
+  --color-customblue-500: #d6efff;
+  --color-customblue-600: #aedefc;
+  --color-customblue-700: #96d3fa;
+  --color-customblue-800: #84ccfa;
+  --color-customblue-900: #72c3f7;
+  --color-customblue-950: #60bcf7;
+}
+
+/*
+  The default border color has changed to `currentColor` in Tailwind CSS v4,
+  so we've added these compatibility styles to make sure everything still
+  looks the same as it did with Tailwind CSS v3.
+
+  If we ever want to remove these styles, we need to add an explicit border
+  color utility to any element that depends on these defaults.
+*/
+/* @layer base {
+  *,
+  ::after,
+  ::before,
+  ::backdrop,
+  ::file-selector-button {
+    border-color: var(--color-gray-200, currentColor);
+  }
+} */
+
+@plugin "daisyui/theme" {
+  name: "light";
+  default: true;
+  prefersdark: false;
+  color-scheme: "light";
+  --color-base-100: oklch(90% 0.058 230.902);
+  --color-base-200: oklch(97% 0.013 236.62);
+  --color-base-300: oklch(82% 0.111 230.318);
+  --color-base-content: oklch(28% 0.091 267.935);
+  --color-primary: oklch(90% 0.076 70.697);
+  --color-primary-content: oklch(28% 0.091 267.935);
+  --color-secondary: oklch(65% 0.241 354.308);
+  --color-secondary-content: oklch(94% 0.028 342.258);
+  --color-accent: oklch(77% 0.152 181.912);
+  --color-accent-content: oklch(38% 0.063 188.416);
+  --color-neutral: oklch(28% 0.091 267.935);
+  --color-neutral-content: oklch(98% 0.002 247.839);
+  --color-info: oklch(70% 0.183 293.541);
+  --color-info-content: oklch(29% 0.066 243.157);
+  --color-success: oklch(76% 0.177 163.223);
+  --color-success-content: oklch(37% 0.077 168.94);
+  --color-warning: oklch(82% 0.189 84.429);
+  --color-warning-content: oklch(41% 0.112 45.904);
+  --color-error: oklch(71% 0.194 13.428);
+  --color-error-content: oklch(27% 0.105 12.094);
+  --radius-selector: 2rem;
+  --radius-field: 2rem;
+  --radius-box: 2rem;
+  --size-selector: 0.25rem;
+  --size-field: 0.25rem;
+  --border: 1px;
+  --depth: 0;
+  --noise: 0;
+}
+
+@plugin "daisyui/theme" {
+  name: "dark";
+  default: false;
+  prefersdark: true;
+  color-scheme: "dark";
+  --color-base-100: oklch(5% 0.146 265.522);
+  --color-base-200: oklch(8% 0.091 267.935);
+  --color-base-300: oklch(35% 0.146 265.522);
+  --color-base-content: oklch(98% 0.003 247.858);
+  --color-primary: oklch(68% 0.169 237.323);
+  --color-primary-content: oklch(28% 0.091 267.935);
+  --color-secondary: oklch(71% 0.203 305.504);
+  --color-secondary-content: oklch(94% 0.028 342.258);
+  --color-accent: oklch(77% 0.152 181.912);
+  --color-accent-content: oklch(38% 0.063 188.416);
+  --color-neutral: oklch(28% 0.091 267.935);
+  --color-neutral-content: oklch(98% 0.002 247.839);
+  --color-info: oklch(70% 0.183 293.541);
+  --color-info-content: oklch(29% 0.066 243.157);
+  --color-success: oklch(76% 0.177 163.223);
+  --color-success-content: oklch(37% 0.077 168.94);
+  --color-warning: oklch(82% 0.189 84.429);
+  --color-warning-content: oklch(41% 0.112 45.904);
+  --color-error: oklch(71% 0.194 13.428);
+  --color-error-content: oklch(27% 0.105 12.094);
+  --radius-selector: 2rem;
+  --radius-field: 2rem;
+  --radius-box: 2rem;
+  --size-selector: 0.25rem;
+  --size-field: 0.25rem;
+  --border: 1px;
+  --depth: 0;
+  --noise: 0;
+}

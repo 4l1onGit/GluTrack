@@ -4,6 +4,7 @@ import { updateUserUnit } from "../api/userApi";
 import { UserContext } from "../contexts/user.context";
 import { glucoseUnit } from "../utils/util";
 import Slide from "./Slide.component";
+import { MessagesContext } from "../contexts/message.context";
 
 interface Props {
   toggle: boolean;
@@ -12,6 +13,7 @@ interface Props {
 
 const Setting = ({ toggle, setToggle }: Props) => {
   const { authUser, setAuthUser } = useContext(UserContext);
+  const { setMessages } = useContext(MessagesContext);
 
   const [editLock, setEditLock] = useState({
     email: false,
@@ -28,8 +30,18 @@ const Setting = ({ toggle, setToggle }: Props) => {
   });
 
   const handleUnitChange = async () => {
-    const res = await updateUserUnit(unit);
-    setAuthUser({ ...authUser!, unit: res.unit });
+    if (unit !== authUser?.unit.id) {
+      const res = await updateUserUnit(unit);
+      setAuthUser({ ...authUser!, unit: res.unit });
+    } else {
+      setMessages([
+        { message: "Unit already set to: " + authUser.unit.unit_type },
+      ]);
+      const modal = document.getElementById(
+        "errors_modal"
+      ) as HTMLDialogElement;
+      modal.showModal();
+    }
   };
 
   // const handleUserDetailsChange = () => {};
@@ -37,44 +49,42 @@ const Setting = ({ toggle, setToggle }: Props) => {
   return (
     <Slide setToggle={setToggle} toggle={toggle}>
       <div className="flex flex-col w-full space-y-3">
-        <h2 className="text-2xl text-center font-semibold text-blue-950">
-          Settings
-        </h2>
-        <h3 className="text-center text-xl font-semibold text-blue-950">
-          Units
-        </h3>
-        <div className="flex justify-evenly items-center h-full bg-gradient-to-b from-customblue-700 to-customblue-900 rounded-2xl p-10 w-full">
-          <div className="flex flex-col justify-center h-full w-full space-y-2">
-            <label htmlFor="">Glucose:</label>
-            <select
-              className="rounded-xl w-[50%] text-center h-full items-center"
-              defaultValue={authUser?.unit.id}
-              onChange={(e) => setUnit(parseInt(e.target.value))}
-            >
-              <option value={glucoseUnit.mmol}>mmol/L</option>
-              <option value={glucoseUnit.mg}>mg/dl</option>
-            </select>
-          </div>
+        <h2 className="text-2xl text-center font-semibold pb-2">Settings</h2>
+
+        <div className="flex flex-col justify-evenly space-y-6 items-center h-full bg-base-100 border-1 border-base-300 rounded-2xl p-10 w-full">
+          <h3 className="text-center text-xl font-semibold ">Unit</h3>
+          <select
+            defaultValue={authUser?.unit.id}
+            className="select select-primary bg-base-200"
+            onChange={(e) => setUnit(parseInt(e.target.value))}
+          >
+            <option disabled={true}>
+              Current:{" "}
+              {authUser?.unit.id == glucoseUnit.mg ? "mg/dl" : "mmol/L"}
+            </option>
+            <option value={glucoseUnit.mmol}>mmol/L</option>
+            <option value={glucoseUnit.mg}>mg/dl</option>
+          </select>
+
           <div className="flex flex-col justify-center h-8 w-full space-y-2 items-center">
             <button
-              className="bg-blue-950 rounded-3xl p-2 text-white font-semibold"
+              className="btn btn-primary p-2 font-semibold w-full"
               onClick={handleUnitChange}
             >
               Confirm
             </button>
           </div>
         </div>
-        <h3 className="text-xl font-semibold text-blue-950 text-center">
-          User Settings
-        </h3>
-        <div className="flex flex-col space-y-4 bg-gradient-to-b from-customblue-700 to-customblue-900 rounded-2xl p-10">
+
+        <div className="flex flex-col space-y-4 bg-base-100 border-1 border-base-300 rounded-2xl p-10">
+          <h3 className="text-xl font-semibold text-center">User Settings</h3>
           <div className="flex flex-col space-y-4">
             <div className="flex flex-col justify-center space-y-2">
               <label className="">Email:</label>
               <div className="flex justify-end">
                 <input
                   type="text"
-                  className="rounded-2xl h-10 w-80 absolute px-4"
+                  className="input input-primary rounded-2xl h-10 w-80 absolute px-4 bg-base-200"
                   value={userDetails.email}
                   onChange={(e) =>
                     setUserDetails({ ...userDetails, email: e.target.value })
@@ -82,7 +92,7 @@ const Setting = ({ toggle, setToggle }: Props) => {
                   disabled={!editLock.email}
                 />
                 <button
-                  className="relative rounded-r-2xl bg-blue-950 h-10 px-3 text-customblue-500"
+                  className="relative rounded-r-2xl bg-primary h-10 px-3"
                   onClick={() =>
                     setEditLock({ ...editLock, email: !editLock.email })
                   }
@@ -96,7 +106,7 @@ const Setting = ({ toggle, setToggle }: Props) => {
               <div className="flex justify-end">
                 <input
                   type="password"
-                  className="rounded-2xl h-10 w-80 absolute px-4"
+                  className="input input-primary rounded-2xl h-10 w-80 absolute px-4 bg-base-200"
                   value={userDetails.password}
                   onChange={(e) =>
                     setUserDetails({
@@ -107,7 +117,7 @@ const Setting = ({ toggle, setToggle }: Props) => {
                   disabled={!editLock.password}
                 />
                 <button
-                  className="relative rounded-r-2xl bg-blue-950 h-10 px-3 text-customblue-500"
+                  className="relative rounded-r-2xl bg-primary h-10 px-3 "
                   onClick={() =>
                     setEditLock({ ...editLock, password: !editLock.password })
                   }
@@ -115,7 +125,7 @@ const Setting = ({ toggle, setToggle }: Props) => {
                   {editLock.password ? <FaLockOpen /> : <FaLock />}
                 </button>
               </div>
-              <button className="bg-blue-950 active:scale-95 shadow-lg active:shadow-md transition-all ease-linear active:bg-blue-900 duration-150 rounded-2xl p-2 text-white font-semibold tracking-wide">
+              <button className="btn btn-primary active:scale-95 shadow-lg active:shadow-md transition-all ease-linear active:bg-blue-900 duration-150 rounded-2xl p-2 font-semibold tracking-wide">
                 Confirm
               </button>
             </div>

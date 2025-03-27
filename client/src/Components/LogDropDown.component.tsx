@@ -1,21 +1,30 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { MdDelete, MdEditSquare } from "react-icons/md";
 import { deleteLog } from "../api/logApi";
 import { Log } from "../utils/util";
 import LogFormEdit from "./LogFormEdit.component";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { MessagesContext } from "../contexts/message.context";
 
 interface Props {
   log: Log;
 }
 
 const LogDropDown = ({ log }: Props) => {
+  const { setMessages } = useContext(MessagesContext);
+
   const [toggle, setToggle] = useState(false);
   const queryClient = useQueryClient();
 
   const handleDelete = () => {
-    mutateAsync(log.id!).catch((e) => console.log(e));
-    // deleteLog(log.id!).catch((e) => console.log(e));
+    mutateAsync(log.id!)
+      .then(() => {
+        setMessages([{ message: "Succesfully Deleted Log " }]);
+      })
+      .catch((e) => setMessages([{ message: "An Error Occured: " + e }]));
+
+    const modal = document.getElementById("msg_modal") as HTMLDialogElement;
+    modal.showModal();
   };
 
   const { mutateAsync, isSuccess } = useMutation({
