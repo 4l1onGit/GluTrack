@@ -66,7 +66,7 @@ const LogList = ({ toggle, setState }: Props) => {
           <div className="skeleton w-full h-full space-y-4"></div>
         )}
       </div>
-      <div className="flex flex-col justify-center w-full h-full items-center">
+      <div className="flex flex-col justify-center w-full h-12 items-center">
         <ul className="w-full space-y-2 h-full">
           {logsData && logsData!.data.length > 0 ? (
             logsData.data?.map((log) => <LogListCard key={log.id} log={log} />)

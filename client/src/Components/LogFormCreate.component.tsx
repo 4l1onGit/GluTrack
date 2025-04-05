@@ -4,7 +4,13 @@ import { FaCamera } from "react-icons/fa";
 import { addLog } from "../api/logApi";
 import { UserContext } from "../contexts/user.context";
 import { mgToMmol } from "../utils/bgConversion";
-import { createDate, glucoseUnit, Log, modifyDate } from "../utils/util";
+import {
+  createDate,
+  glucoseUnit,
+  Log,
+  MessageType,
+  modifyDate,
+} from "../utils/util";
 import Slide from "./Slide.component";
 import { MessagesContext } from "../contexts/message.context";
 
@@ -82,7 +88,12 @@ const LogFormCreate = ({ toggle, setState }: Props) => {
         const res = await mutateAsync(formData);
         if (res.status == 200) {
           setState(false);
-          setMessages([{ message: "Successfully created log!" }]);
+          setMessages([
+            {
+              message: "Successfully created log!",
+              error: MessageType.SUCCESS,
+            },
+          ]);
           const modal = document.getElementById(
             "msg_modal"
           ) as HTMLDialogElement;

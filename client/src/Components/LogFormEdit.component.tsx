@@ -10,6 +10,7 @@ import {
   createDate,
   glucoseUnit,
   Log,
+  MessageType,
   modifyDate,
 } from "../utils/util";
 import { MessagesContext } from "../contexts/message.context";
@@ -92,7 +93,9 @@ const LogFormEdit = ({ setToggle, log }: Props) => {
         setFormData({ ...initialState, id: undefined });
         setGlucose(0);
         setSubmitting(false);
-        setMessages([{ message: "Successfully Edited Log!" }]);
+        setMessages([
+          { message: "Successfully Edited Log!", error: MessageType.SUCCESS },
+        ]);
         const modal = document.getElementById("msg_modal") as HTMLDialogElement;
         modal.showModal();
       })
@@ -104,7 +107,7 @@ const LogFormEdit = ({ setToggle, log }: Props) => {
 
   return (
     <form
-      className="space-y-2 bg-base-200 shadow-md transition-all p-6 rounded-2xl h-[55vh]"
+      className="space-y-2 bg-base-200 shadow-md w-[95vw] transition-all p-4 rounded-2xl h-[70vh]"
       action="patch"
     >
       <div className="flex flex-col w-full items-end">
@@ -132,7 +135,7 @@ const LogFormEdit = ({ setToggle, log }: Props) => {
             Time <span className="font-thin text-xs">(optional)</span>
           </label>
           <input
-            className="h-10 rounded-2xl w-full text-center px-4 bg-base-100"
+            className="h-10 rounded-2xl w-full text-center px-2 bg-base-100"
             type="datetime-local"
             name="inputTime"
             id="inputTime"
@@ -192,7 +195,7 @@ const LogFormEdit = ({ setToggle, log }: Props) => {
           </button>
         </div>
       </div>
-      <div className="flex flex-col py-2 h-full space-y-2">
+      <div className="flex flex-col py-2 h-full space-y-4">
         <label className="uppercase text-xs font-bold" htmlFor="inputNotes">
           Notes <span className="font-thin text-xs">(optional)</span>
         </label>

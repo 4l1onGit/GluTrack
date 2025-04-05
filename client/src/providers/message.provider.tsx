@@ -1,9 +1,6 @@
 import { ReactNode, useState } from "react";
 import { MessagesContext } from "../contexts/message.context";
-
-interface Message {
-  message: string;
-}
+import { Message } from "../utils/util";
 
 interface Props {
   children: ReactNode;

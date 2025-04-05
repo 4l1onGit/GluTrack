@@ -130,3 +130,16 @@ export type UserResponseType = {
   unit: UnitType
 
 }
+
+export enum MessageType {
+  WARNING,
+  ERROR,
+  SUCCESS
+}
+
+
+export interface Message {
+    message: string;
+    error: MessageType
+}
+  

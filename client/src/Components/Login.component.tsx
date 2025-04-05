@@ -6,6 +6,7 @@ import { MdAlternateEmail } from "react-icons/md";
 import { FaKey } from "react-icons/fa";
 import { UserContext } from "../contexts/user.context";
 import { MessagesContext } from "../contexts/message.context";
+import { MessageType } from "../utils/util";
 
 type User = {
   username: string;
@@ -51,7 +52,9 @@ const Login = () => {
         });
       }
     } catch (e) {
-      setMessages([{ message: "Failed to Authenticate: " + e }]);
+      setMessages([
+        { message: "Failed to Authenticate: " + e, error: MessageType.ERROR },
+      ]);
       const modal = document.getElementById("msg_modal") as HTMLDialogElement;
       modal.showModal();
     }
@@ -62,7 +65,7 @@ const Login = () => {
   } else {
     return (
       <div className="flex flex-col justify-center p-4 items-center h-[100vh] bg-base-200">
-        <div className="flex flex-col bg-linear-to-b bg-base-100 h-[55vh] items-center justify-center space-y-6 rounded-xl w-full md:w-[25vw] shadow-lg">
+        <div className="flex flex-col bg-linear-to-b bg-base-100 h-[70vh] items-center justify-center space-y-4 rounded-xl w-full md:w-[25vw] shadow-lg">
           <h2 className="text-3xl font-bold p-4 text-blue-100">
             {registerToggle ? "Register" : "Login"}
           </h2>
@@ -101,10 +104,6 @@ const Login = () => {
                 <FaKey />
               </span>
             </div>
-
-            <span className="text-sm self-end px-2 text-blue-950">
-              reset password?
-            </span>
           </div>
           <div className="flex flex-col w-full px-10 py-6">
             <button

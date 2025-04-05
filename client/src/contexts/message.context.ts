@@ -1,10 +1,6 @@
 import { createContext } from "react";
+import { Message } from "../utils/util";
 
-
-interface Message {
-    message: string;
-  }
-  
 
 interface MessageContextType {
   messages: Message[] | null

@@ -2,7 +2,7 @@ import { useContext, useState } from "react";
 // import { FaLock, FaLockOpen } from "react-icons/fa";
 import { updateUserUnit } from "../api/userApi";
 import { UserContext } from "../contexts/user.context";
-import { glucoseUnit } from "../utils/util";
+import { glucoseUnit, MessageType } from "../utils/util";
 import Slide from "./Slide.component";
 import { MessagesContext } from "../contexts/message.context";
 
@@ -33,15 +33,22 @@ const Setting = ({ toggle, setToggle }: Props) => {
     if (unit !== authUser?.unit.id) {
       const res = await updateUserUnit(unit);
       setAuthUser({ ...authUser!, unit: res.unit });
+      setMessages([
+        {
+          message: "Unit set to: " + authUser!.unit.unit_type,
+          error: MessageType.SUCCESS,
+        },
+      ]);
     } else {
       setMessages([
-        { message: "Unit already set to: " + authUser.unit.unit_type },
+        {
+          message: "Unit already set to: " + authUser.unit.unit_type,
+          error: MessageType.WARNING,
+        },
       ]);
-      const modal = document.getElementById(
-        "errors_modal"
-      ) as HTMLDialogElement;
-      modal.showModal();
     }
+    const modal = document.getElementById("msg_modal") as HTMLDialogElement;
+    modal.showModal();
   };
 
   // const handleUserDetailsChange = () => {};
