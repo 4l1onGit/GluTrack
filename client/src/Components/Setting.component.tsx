@@ -1,5 +1,5 @@
 import { useContext, useState } from "react";
-import { FaLock, FaLockOpen } from "react-icons/fa";
+// import { FaLock, FaLockOpen } from "react-icons/fa";
 import { updateUserUnit } from "../api/userApi";
 import { UserContext } from "../contexts/user.context";
 import { glucoseUnit } from "../utils/util";
@@ -15,19 +15,19 @@ const Setting = ({ toggle, setToggle }: Props) => {
   const { authUser, setAuthUser } = useContext(UserContext);
   const { setMessages } = useContext(MessagesContext);
 
-  const [editLock, setEditLock] = useState({
-    email: false,
-    password: false,
-  });
+  // const [editLock, setEditLock] = useState({
+  //   email: false,
+  //   password: false,
+  // });
 
   const [unit, setUnit] = useState<glucoseUnit>(
     authUser?.unit.id == 1 ? glucoseUnit.mmol : glucoseUnit.mg
   );
 
-  const [userDetails, setUserDetails] = useState({
-    email: authUser?.email,
-    password: "",
-  });
+  // const [userDetails, setUserDetails] = useState({
+  //   email: authUser?.email,
+  //   password: "",
+  // });
 
   const handleUnitChange = async () => {
     if (unit !== authUser?.unit.id) {
@@ -52,7 +52,9 @@ const Setting = ({ toggle, setToggle }: Props) => {
         <h2 className="text-2xl text-center font-semibold pb-2">Settings</h2>
 
         <div className="flex flex-col justify-evenly space-y-6 items-center h-full bg-base-100 border-1 border-base-300 rounded-2xl p-10 w-full">
-          <h3 className="text-center text-xl font-semibold ">Unit</h3>
+          <h3 className="text-center text-xl font-semibold ">
+            Blood Glucose Unit
+          </h3>
           <select
             defaultValue={authUser?.unit.id}
             className="select select-primary bg-base-200"
@@ -76,7 +78,7 @@ const Setting = ({ toggle, setToggle }: Props) => {
           </div>
         </div>
 
-        <div className="flex flex-col space-y-4 bg-base-100 border-1 border-base-300 rounded-2xl p-10">
+        {/* <div className="flex flex-col space-y-4 bg-base-100 border-1 border-base-300 rounded-2xl p-10">
           <h3 className="text-xl font-semibold text-center">User Settings</h3>
           <div className="flex flex-col space-y-4">
             <div className="flex flex-col justify-center space-y-2">
@@ -84,7 +86,7 @@ const Setting = ({ toggle, setToggle }: Props) => {
               <div className="flex justify-end">
                 <input
                   type="text"
-                  className="input input-primary rounded-2xl h-10 w-80 absolute px-4 bg-base-200"
+                  className="input input-primary rounded-2xl h-10 absolute px-4 bg-base-200"
                   value={userDetails.email}
                   onChange={(e) =>
                     setUserDetails({ ...userDetails, email: e.target.value })
@@ -106,7 +108,7 @@ const Setting = ({ toggle, setToggle }: Props) => {
               <div className="flex justify-end">
                 <input
                   type="password"
-                  className="input input-primary rounded-2xl h-10 w-80 absolute px-4 bg-base-200"
+                  className="input input-primary rounded-2xl h-10 absolute px-4 bg-base-200"
                   value={userDetails.password}
                   onChange={(e) =>
                     setUserDetails({
@@ -130,7 +132,7 @@ const Setting = ({ toggle, setToggle }: Props) => {
               </button>
             </div>
           </div>
-        </div>
+        </div> */}
       </div>
     </Slide>
   );

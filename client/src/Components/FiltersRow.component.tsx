@@ -12,7 +12,7 @@ interface Props {
 
 const FilterRow = ({ btnsData, currentFilter, setFilter }: Props) => {
   return (
-    <div className="flex justify-center space-x-4 w-full lg:w-[40vw]">
+    <div className="flex justify-center space-x-4 py-2 w-full lg:w-[40vw]">
       {btnsData.map((item) => (
         <ToggleButton
           key={item.filter}

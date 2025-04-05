@@ -21,8 +21,6 @@ const LogList = ({ toggle, setState }: Props) => {
   const [maxPage, setMaxPage] = useState<number>(1);
   const [filters, setFilters] = useState<logFilters>({});
 
-  console.log(filters);
-
   const {
     data: logsData,
     isLoading: logsDataLoading,

@@ -15,7 +15,7 @@ const ToggleButton = ({ btnData, setFilter, currentFilter }: Props) => {
         //@ts-ignore
         setFilter(btnData.filter);
       }}
-      className={`bg-linear-to-b w-[25%] h-[3rem] lg:h-[4rem] rounded-xl font-bold text-xs shadow-lg uppercase border-1 border-base-300 ${
+      className={`bg-linear-to-b w-[25%] h-[6vh] lg:h-[4rem] rounded-xl font-bold text-xs shadow-lg uppercase border-1 border-base-300 ${
         currentFilter == btnData.filter ? btnData.style : "bg-base-100"
       }`}
       key={btnData.label}

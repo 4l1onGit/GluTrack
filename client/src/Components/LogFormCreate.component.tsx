@@ -204,14 +204,14 @@ const LogFormCreate = ({ toggle, setState }: Props) => {
             </button>
           </div>
         </div>
-        <div className="flex flex-col py-2 h-full space-y-2">
+        <div className="flex flex-col py-2 space-y-2">
           <label className="uppercase text-xs font-bold" htmlFor="inputNotes">
             Notes <span className="font-thin text-xs">(optional)</span>
           </label>
           <textarea
             name="inputNotes"
             id="inputNotes"
-            className="w-full h-[80%] rounded-xl p-2 bg-base-100"
+            className="w-full h-[40vh] rounded-xl p-2 bg-base-100"
             value={formData?.note}
             onChange={(e) =>
               setFormData({

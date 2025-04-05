@@ -77,7 +77,7 @@ function App() {
 
   const [toggleSetting, setToggleSetting] = useState<boolean>(false);
   const menuBtnStyle =
-    "bg-base-100 shadow-lg w-full text-[4.5rem] flex justify-center items-center border-1 border-base-300 rounded-xl hover:bg-base-300 transition-colors duration-150 ease-in-out text-base font-bold";
+    "bg-base-100 shadow-lg w-full text-[4.5rem] flex justify-center items-center border-1 border-base-300 rounded-xl hover:bg-base-300 transition-colors py-2 duration-150 ease-in-out text-base font-bold";
 
   if (navigator.onLine && localStorage.length) {
     postCache();
@@ -89,7 +89,7 @@ function App() {
     return <Login />;
   } else {
     return (
-      <div className="relative flex flex-col h-screen justify-between px-4 py-6 space-y-6 w-full mx-auto lg:items-center bg-base-200">
+      <div className="relative flex flex-col h-screen justify-around px-3 py-2 w-full mx-auto lg:items-center bg-base-200">
         <div
           className={
             toggleForm || toggleLogList || toggleSetting
@@ -101,7 +101,7 @@ function App() {
           className={
             toggleForm || toggleLogList || toggleSetting
               ? "transition-all duration-150 ease-out opacity-0"
-              : `bg-base-100 border-1 border-base-300 rounded-xl p-2 w-full h-[16rem] lg:h-[40vh] lg:w-[40vw] drop-shadow-xl transition-all opacity-100 duration-500 ease-linear`
+              : `bg-base-100 border-1 border-base-300 rounded-xl p-2 w-full h-[30vh] lg:h-[40vh] lg:w-[40vw] drop-shadow-xl transition-all opacity-100 duration-500 ease-linear`
           }
         >
           <LineChartComponent typeFilter={filterType} timeFilter={timeFilter} />
@@ -117,10 +117,10 @@ function App() {
           setFilter={setFilterType}
         />
 
-        <div className="flex justify-center space-x-4 w-full lg:w-[40vw] h-[15vh]">
+        <div className="flex justify-center items-center space-x-4 py-2 w-full lg:w-[40vw] h-[20vh]">
           <button
             onClick={() => setToggleForm(!toggleForm)}
-            className={menuBtnStyle}
+            className={`h-full ${menuBtnStyle}`}
           >
             <div className="flex flex-col">
               <FaPlus />{" "}
