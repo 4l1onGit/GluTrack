@@ -8,12 +8,14 @@ import { mgToMmol, mmolToMg } from "../utils/bgConversion";
 import {
   convertDateDefault,
   createDate,
+  formatDate,
   glucoseUnit,
   Log,
   MessageType,
   modifyDate,
 } from "../utils/util";
 import { MessagesContext } from "../contexts/message.context";
+import { uploadImage } from "../api/imageApi";
 
 const initialState = {
   glucose: 0,
@@ -50,9 +52,26 @@ const LogFormEdit = ({ setToggle, log }: Props) => {
     },
   });
 
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const image = e.target.files;
+    if (image) {
+      const res = await uploadImage(image![0]);
+      setFormData({
+        ...formData!,
+        photo: res.image_url,
+      });
+    }
+  };
+
   useEffect(() => {
     if (log.date) {
       setDateIfExists(log.date);
+      setFormData((f) =>
+        Object.assign({
+          ...f,
+          date: modifyDate(log.date),
+        })
+      );
     }
   }, [log]);
 
@@ -76,7 +95,7 @@ const LogFormEdit = ({ setToggle, log }: Props) => {
   };
 
   const setDateIfExists = (date: string) => {
-    setDateInput(convertDateDefault(date));
+    setDateInput(convertDateDefault(formatDate(date)));
   };
 
   const handleSubmission = async (e: FormEvent) => {
@@ -183,16 +202,21 @@ const LogFormEdit = ({ setToggle, log }: Props) => {
         </div>
 
         <div className="flex flex-col space-y-2 relative justify-center w-full">
-          <label className="uppercase text-xs font-bold" htmlFor="photoBtn">
-            Photo
+          <label className="uppercase text-xs font-bold" htmlFor="imageEdit">
+            Photo <span className="font-thin text-xs">(optional)</span>
           </label>
-          <button
-            id="photoBtn"
-            onSubmit={() => {}}
-            className="bg-primary rounded-2xl w-full h-10"
-          >
-            <FaCamera className="mx-auto" />
-          </button>
+          <label htmlFor="imageEdit">
+            <input
+              id="imageEdit"
+              name="image"
+              type="file"
+              onChange={(e) => handleImageUpload(e)}
+              className="hidden"
+            />
+            <span className="btn btn-primary rounded-2xl w-full h-10 text-2xl">
+              <FaCamera />
+            </span>
+          </label>
         </div>
       </div>
       <div className="flex flex-col py-2 h-full space-y-4">

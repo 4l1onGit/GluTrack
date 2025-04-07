@@ -35,7 +35,7 @@ const ListFilters = ({ setFilters }: Props) => {
   }, [range, date]);
 
   return (
-    <div className="flex bg-base-100 justify-center items-center w-full h-full rounded-xl shadow-md ">
+    <div className="flex bg-base-100 justify-center items-center w-full h-full rounded-xl shadow-md">
       <div className="flex justify-evenly space-x-2">
         <select
           defaultValue={Ranges.YEAR}

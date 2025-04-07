@@ -13,6 +13,7 @@ import {
 } from "../utils/util";
 import Slide from "./Slide.component";
 import { MessagesContext } from "../contexts/message.context";
+import { uploadImage } from "../api/imageApi";
 
 const initialState = {
   glucose: 0,
@@ -65,6 +66,17 @@ const LogFormCreate = ({ toggle, setState }: Props) => {
     setDateInput(e.target.value);
   };
 
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const image = e.target.files;
+    if (image) {
+      const res = await uploadImage(image![0]);
+      setFormData({
+        ...formData!,
+        photo: res.image_url,
+      });
+    }
+  };
+
   const handleGlucoseChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setGlucose(e.target.valueAsNumber);
     setFormData({
@@ -102,7 +114,14 @@ const LogFormCreate = ({ toggle, setState }: Props) => {
         setFormData({ ...initialState, id: undefined });
         setGlucose(0);
       } catch (e) {
-        console.log(e);
+        setMessages([
+          {
+            message: "Error!: " + e,
+            error: MessageType.SUCCESS,
+          },
+        ]);
+        const modal = document.getElementById("msg_modal") as HTMLDialogElement;
+        modal.showModal();
       }
     } else {
       try {
@@ -147,6 +166,7 @@ const LogFormCreate = ({ toggle, setState }: Props) => {
               {authUser?.unit.id == 1 ? "mmol" : "mg"}
             </span>
           </div>
+
           <div className="flex flex-col space-y-2">
             <label className="uppercase text-xs font-bold" htmlFor="inputTime">
               Time <span className="font-thin text-xs">(optional)</span>
@@ -203,16 +223,21 @@ const LogFormCreate = ({ toggle, setState }: Props) => {
           </div>
 
           <div className="flex flex-col space-y-2 relative justify-center w-full">
-            <label className="uppercase text-xs font-bold" htmlFor="photoBtn">
-              Photo
+            <label className="uppercase text-xs font-bold" htmlFor="image">
+              Photo <span className="font-thin text-xs">(optional)</span>
             </label>
-            <button
-              id="photoBtn"
-              onSubmit={() => {}}
-              className="btn btn-primary rounded-2xl w-full h-10"
-            >
-              <FaCamera className="mx-auto scale-150" />
-            </button>
+            <label htmlFor="image">
+              <input
+                id="image"
+                name="image"
+                type="file"
+                onChange={(e) => handleImageUpload(e)}
+                className="hidden"
+              />
+              <span className="btn btn-primary rounded-2xl w-full h-10 text-2xl">
+                <FaCamera />
+              </span>
+            </label>
           </div>
         </div>
         <div className="flex flex-col py-2 space-y-2">

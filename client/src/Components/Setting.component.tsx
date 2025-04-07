@@ -35,7 +35,7 @@ const Setting = ({ toggle, setToggle }: Props) => {
       setAuthUser({ ...authUser!, unit: res.unit });
       setMessages([
         {
-          message: "Unit set to: " + authUser!.unit.unit_type,
+          message: "Unit set to: " + res.unit.unit_type,
           error: MessageType.SUCCESS,
         },
       ]);
