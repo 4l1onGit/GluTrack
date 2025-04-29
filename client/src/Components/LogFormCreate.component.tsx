@@ -125,7 +125,7 @@ const LogFormCreate = ({ toggle, setState }: Props) => {
         console.log(e);
         setMessages([
           {
-            message: "Error Invalid Data",
+            message: "Error Invalid Data: Make sure Date isn't Empty",
             error: MessageType.ERROR,
           },
         ]);

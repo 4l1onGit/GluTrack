@@ -13,6 +13,14 @@ type User = {
   password: string;
 };
 
+type ErrorResponse = {
+  response: {
+    data: {
+      message: string;
+    };
+  };
+};
+
 const Login = () => {
   const [user, setUser] = useState<User>({
     username: "",
@@ -54,8 +62,13 @@ const Login = () => {
         });
       }
     } catch (e) {
+      const error = e as ErrorResponse;
+
       setMessages([
-        { message: "Failed to Authenticate: " + e, error: MessageType.ERROR },
+        {
+          message: "Failed to Authenticate: " + error.response.data.message,
+          error: MessageType.ERROR,
+        },
       ]);
       const modal = document.getElementById("msg_modal") as HTMLDialogElement;
       modal.showModal();

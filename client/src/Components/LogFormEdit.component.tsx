@@ -128,6 +128,14 @@ const LogFormEdit = ({ setToggle, log }: Props) => {
       })
       .catch((e) => {
         console.log(e);
+        setMessages([
+          {
+            message: "Error Invalid Data: Make sure Date isn't Empty",
+            error: MessageType.ERROR,
+          },
+        ]);
+        const modal = document.getElementById("msg_modal") as HTMLDialogElement;
+        modal.showModal();
         setSubmitting(false);
       });
   };

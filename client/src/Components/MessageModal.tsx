@@ -1,6 +1,8 @@
 import { useContext } from "react";
 import { MessagesContext } from "../contexts/message.context";
 import { MessageType } from "../utils/util";
+import { FaSmile } from "react-icons/fa";
+import { FaFaceAngry, FaFaceSurprise } from "react-icons/fa6";
 
 const MessageModal = () => {
   const { messages, setMessages } = useContext(MessagesContext);
@@ -8,7 +10,7 @@ const MessageModal = () => {
     <dialog id="msg_modal" className="modal" onClose={() => setMessages(null)}>
       <div className="modal-box space-y-2">
         <h3
-          className={`font-bold text-lg  ${
+          className={`font-bold text-2xl  ${
             messages != null
               ? messages![0].error == MessageType.ERROR
                 ? "text-red-400"
@@ -18,13 +20,30 @@ const MessageModal = () => {
               : null
           }`}
         >
-          {messages != null
-            ? messages![0].error == MessageType.ERROR
-              ? "Error!"
-              : messages![0].error == MessageType.SUCCESS
-              ? "Success!"
-              : "Warning!"
-            : null}
+          {messages != null ? (
+            messages![0].error == MessageType.ERROR ? (
+              <span className="flex space-x-2 items-center justify">
+                <p>Error!</p>
+                <span className="text-red-300">
+                  <FaFaceAngry />
+                </span>
+              </span>
+            ) : messages![0].error == MessageType.SUCCESS ? (
+              <span className="flex space-x-2 items-center justify">
+                <p>Success!</p>
+                <span className="text-yellow-300">
+                  <FaSmile />
+                </span>
+              </span>
+            ) : (
+              <span className="flex space-x-2 items-center justify">
+                <p>Warning!</p>
+                <span className="text-yellow-300">
+                  <FaFaceSurprise />
+                </span>
+              </span>
+            )
+          ) : null}
         </h3>
         <ul className="flex flex-col">
           {messages?.map((e) => (
