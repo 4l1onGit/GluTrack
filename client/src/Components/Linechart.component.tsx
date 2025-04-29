@@ -47,7 +47,7 @@ const LineChartComponent = ({ typeFilter, timeFilter }: Props) => {
           timeFilter === graphTimeFilter.WEEK
             ? getMonth()
             : undefined,
-        week: timeFilter === graphTimeFilter.WEEK ? true : false,
+        week: timeFilter === graphTimeFilter.WEEK ? true : undefined,
         year: date.getFullYear().toString(),
       }),
     queryKey: ["logsGraphFilter", { timeFilter, dateValue }],
