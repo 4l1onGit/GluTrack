@@ -74,6 +74,14 @@ const LogFormCreate = ({ toggle, setState }: Props) => {
         ...formData!,
         photo: res.image_url,
       });
+      setMessages([
+        {
+          message: "Image uploaded",
+          error: MessageType.SUCCESS,
+        },
+      ]);
+      const modal = document.getElementById("msg_modal") as HTMLDialogElement;
+      modal.showModal();
     }
   };
 
@@ -114,10 +122,11 @@ const LogFormCreate = ({ toggle, setState }: Props) => {
         setFormData({ ...initialState, id: undefined });
         setGlucose(0);
       } catch (e) {
+        console.log(e);
         setMessages([
           {
-            message: "Error!: " + e,
-            error: MessageType.SUCCESS,
+            message: "Error Invalid Data",
+            error: MessageType.ERROR,
           },
         ]);
         const modal = document.getElementById("msg_modal") as HTMLDialogElement;
@@ -169,7 +178,7 @@ const LogFormCreate = ({ toggle, setState }: Props) => {
 
           <div className="flex flex-col space-y-2">
             <label className="uppercase text-xs font-bold" htmlFor="inputTime">
-              Time <span className="font-thin text-xs">(optional)</span>
+              Time
             </label>
             <input
               className="h-10 rounded-2xl w-full text-center px-4 input input-primary bg-base-100"

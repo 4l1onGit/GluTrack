@@ -60,6 +60,14 @@ const LogFormEdit = ({ setToggle, log }: Props) => {
         ...formData!,
         photo: res.image_url,
       });
+      setMessages([
+        {
+          message: "Image uploaded",
+          error: MessageType.SUCCESS,
+        },
+      ]);
+      const modal = document.getElementById("msg_modal") as HTMLDialogElement;
+      modal.showModal();
     }
   };
 

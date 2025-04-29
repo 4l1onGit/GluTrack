@@ -1,11 +1,11 @@
 import { useMutation } from "@tanstack/react-query";
 import { useContext, useState } from "react";
+import { FaKey } from "react-icons/fa";
+import { MdAlternateEmail } from "react-icons/md";
 import { loginUser, registerUser } from "../api/userApi";
 import App from "../App";
-import { MdAlternateEmail } from "react-icons/md";
-import { FaKey } from "react-icons/fa";
-import { UserContext } from "../contexts/user.context";
 import { MessagesContext } from "../contexts/message.context";
+import { UserContext } from "../contexts/user.context";
 import { MessageType } from "../utils/util";
 
 type User = {
@@ -25,6 +25,7 @@ const Login = () => {
   const [registerToggle, setRegisterToggle] = useState<boolean>(false);
 
   const [auth, setAuth] = useState<boolean>(false);
+  const [submitting, setSubmitting] = useState(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
@@ -36,6 +37,7 @@ const Login = () => {
   });
 
   const handleLogin = async () => {
+    setSubmitting(true);
     try {
       const data = await authMutation(user);
 
@@ -58,6 +60,7 @@ const Login = () => {
       const modal = document.getElementById("msg_modal") as HTMLDialogElement;
       modal.showModal();
     }
+    setSubmitting(false);
   };
 
   if (auth) {
@@ -110,7 +113,17 @@ const Login = () => {
               className="btn btn-neutral rounded-3xl py-1 font-semibold h-12"
               onClick={handleLogin}
             >
-              {registerToggle ? "Register" : "Login"}
+              {registerToggle ? (
+                submitting ? (
+                  <span className="loading loading-dots loading-sm"></span>
+                ) : (
+                  "Register"
+                )
+              ) : submitting ? (
+                <span className="loading loading-dots loading-sm"></span>
+              ) : (
+                "Login"
+              )}
             </button>
             <div className="flex items-center justify-center py-4 space-x-2 font-semibold text-sm">
               <span>
