@@ -143,18 +143,25 @@ const LogFormEdit = ({ setToggle, log }: Props) => {
         </button>
       </div>
       <div className="flex space-x-4  pb-4">
-        <div className="flex flex-col space-y-2 w-28">
-          <label className="uppercase text-xs font-bold" htmlFor="inputGlucose">
+        <div className="flex flex-col justify-end items-end w-28">
+          <label
+            className="self-start uppercase text-xs font-bold pb-2"
+            htmlFor="inputGlucose"
+          >
             Glucose
           </label>
+
           <input
-            className="h-10 rounded-2xl px-4 bg-base-100"
+            className="h-10 absolute rounded-2xl px-4 w-28 input input-primary bg-base-100"
             type="number"
             name="inputGlucose"
             value={glucose}
             onChange={(e) => handleGlucoseChange(e)}
             id="inputGlucose"
           />
+          <span className="relative h-10 w-14 rounded-r-2xl bg-primary py-2 text-center font-semibold">
+            {authUser?.unit.id == 1 ? "mmol" : "mg"}
+          </span>
         </div>
 
         <div className="flex flex-col space-y-2">
