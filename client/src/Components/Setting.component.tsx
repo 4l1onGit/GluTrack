@@ -29,6 +29,12 @@ const Setting = ({ toggle, setToggle }: Props) => {
   //   password: "",
   // });
 
+  const handleLogOut = async () => {
+    sessionStorage.removeItem("jwt");
+    setAuthUser(null);
+    setToggle(!toggle);
+  };
+
   const handleUnitChange = async () => {
     if (unit !== authUser?.unit.id) {
       const res = await updateUserUnit(unit);
@@ -83,6 +89,15 @@ const Setting = ({ toggle, setToggle }: Props) => {
               Confirm
             </button>
           </div>
+        </div>
+        <div className="flex flex-col justify-evenly space-y-6 items-center h-full bg-base-100 border-1 border-base-300 rounded-2xl p-10 w-full">
+          <h3 className="text-center text-xl font-semibold ">Sign Out?</h3>
+          <button
+            onClick={handleLogOut}
+            className="btn btn-primary p-2 font-semibold w-50"
+          >
+            Logout
+          </button>
         </div>
 
         {/* <div className="flex flex-col space-y-4 bg-base-100 border-1 border-base-300 rounded-2xl p-10">

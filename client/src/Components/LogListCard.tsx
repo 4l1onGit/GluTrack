@@ -38,7 +38,7 @@ const LogListCard = ({ log }: Props) => {
           </li>
           <li>
             Carbs: {log.carb}
-            <span className="text-xs">G</span>
+            <span className="text-xs">g</span>
           </li>
           {selectedLog == log && togglePopup ? (
             <LogDropDown key={selectedLog?.id} log={selectedLog!} />

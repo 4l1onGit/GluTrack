@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { ImCross } from "react-icons/im";
 import { logFilters } from "../utils/util";
 
 interface Props {
@@ -34,10 +35,22 @@ const ListFilters = ({ setFilters }: Props) => {
     }
   }, [range, date]);
 
+  const clearFilters = () => {
+    setFilters({});
+    setRange(Ranges.YEAR);
+    const selectRange = document.getElementById(
+      "rangeSelectBox"
+    ) as HTMLInputElement;
+
+    selectRange.value = Ranges.YEAR;
+    setDate("");
+  };
+
   return (
     <div className="flex bg-base-100 justify-center items-center w-full h-full rounded-xl shadow-md">
       <div className="flex justify-evenly space-x-2">
         <select
+          id="rangeSelectBox"
           defaultValue={Ranges.YEAR}
           onChange={(e) => setRange(e.target.value)}
           className="h-10 rounded-2xl select select-primary bg-base-200"
@@ -56,6 +69,9 @@ const ListFilters = ({ setFilters }: Props) => {
           value={date}
           onChange={(e) => setDate(e.target.value)}
         />
+        <button onClick={() => clearFilters()} className="btn btn-primary w-12">
+          <ImCross />
+        </button>
       </div>
     </div>
   );

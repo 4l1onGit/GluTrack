@@ -69,7 +69,7 @@ const Login = () => {
     return (
       <div className="flex flex-col justify-center p-4 items-center h-[100vh] bg-base-200">
         <div className="flex flex-col bg-linear-to-b bg-base-100 h-[70vh] items-center justify-center space-y-4 rounded-xl w-full md:w-[25vw] shadow-lg">
-          <h2 className="text-3xl font-bold p-4 text-blue-100">
+          <h2 className="text-3xl font-bold p-4">
             {registerToggle ? "Register" : "Login"}
           </h2>
           <div className="flex flex-col space-y-2 w-full px-10">
